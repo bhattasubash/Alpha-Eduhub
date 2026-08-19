@@ -2,6 +2,11 @@
 
 A production-level, full-stack School Management System built with modern technologies. Features multi-role authentication, complete academic management, and beautiful responsive design.
 
+## 🚀 Deployment Update
+- Fixed database connection with Supabase connection pooling
+- Removed 3D packages for deployment stability
+- Added pgbouncer=true for Prisma compatibility
+
 ## 🎯 Quick Demo
 
 **Try the Demo Login**: [`/demo-login`](/demo-login)
@@ -260,6 +265,8 @@ This School Management System demonstrates:
 
 **Mahammad Bilal Hyder**
 - LinkedIn: [linkedin.com/in/mahammad-bilal-hyder-493295356](https://www.linkedin.com/in/mahammad-bilal-hyder-493295356)
-- Email: alphaeduhub360@gmail.com#   p r o j e c t s  
- #   a l p h a - e d u - h u b  
+- Email: alphaeduhub360@gmail.com#   p r o j e c t s 
+ 
+ #   a l p h a - e d u - h u b 
+ 
  
