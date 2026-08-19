@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, EyeOff, GraduationCap, Lock, User, ArrowLeft, Sparkles, Shield, Zap, Users, CheckCircle, Play, Settings as SettingsIcon, ExternalLink } from "lucide-react";
+import { Eye, EyeOff, GraduationCap, Lock, User, ArrowLeft, Sparkles, Shield, Zap, Users, CheckCircle, Play, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,32 +9,32 @@ import { motion, AnimatePresence } from "framer-motion";
 const demoCredentials = [
   {
     role: "Super Admin",
-    username: "superadmin@alphaeduhub.com",
-    password: "demo123",
+    username: "demo.superadmin@alphaeduhub.com",
+    password: "DemoSuperAdmin@123",
     icon: Shield,
     color: "from-purple-500 to-pink-500",
     description: "Full system control & management"
   },
   {
     role: "School Admin", 
-    username: "admin@demoschool.edu",
-    password: "demo123",
+    username: "demo.admin@alphaeduhub.com",
+    password: "DemoAdmin@123",
     icon: Users,
     color: "from-blue-500 to-cyan-500",
     description: "School operations & oversight"
   },
   {
     role: "Teacher",
-    username: "teacher@demoschool.edu", 
-    password: "demo123",
+    username: "demo.teacher@alphaeduhub.com", 
+    password: "DemoTeacher@123",
     icon: GraduationCap,
     color: "from-green-500 to-emerald-500",
     description: "Classroom management & teaching"
   },
   {
     role: "Student",
-    username: "student@demoschool.edu",
-    password: "demo123",
+    username: "demo.student@alphaeduhub.com",
+    password: "DemoStudent@123",
     icon: Sparkles,
     color: "from-orange-500 to-yellow-500",
     description: "Learning portal & activities"
@@ -42,7 +42,7 @@ const demoCredentials = [
 ];
 
 export default function DemoLoginPage() {
-  const { login } = useAuth();
+  const { login, demoLogin } = useAuth();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -57,44 +57,15 @@ export default function DemoLoginPage() {
     setLoading(true);
     
     try {
-      // Use the existing authentication system
-      await login(demo.username, demo.password);
+      // Use direct demo login (no authentication required)
+      await demoLogin(demo.username);
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
       }, 2000);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Login failed";
-      
-      // Check if it's a database connection error
-      if (errorMessage.includes("connect") || errorMessage.includes("database") || errorMessage.includes("ECONNREFUSED")) {
-        setError("Database not connected. Please set up your PostgreSQL database in .env file");
-      } else if (errorMessage.includes("Invalid credentials")) {
-        setError(`Demo user not found. Run setup to create demo users.`);
-      } else {
-        setError(errorMessage);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function setupDemoUsers() {
-    setLoading(true);
-    setError("");
-    try {
-      const res = await fetch("/api/setup-demo", {
-        method: "POST",
-      });
-      const data = await res.json();
-      
-      if (res.ok) {
-        setError("Demo users created! You can now login.");
-      } else {
-        setError(data.error || "Failed to setup demo users");
-      }
-    } catch (err) {
-      setError("Failed to setup demo users. Please try again.");
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -253,21 +224,6 @@ export default function DemoLoginPage() {
                 </div>
               </div>
             </div>
-
-            <button
-              onClick={setupDemoUsers}
-              disabled={loading}
-              className="w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white font-semibold rounded-xl shadow-lg shadow-green-500/30 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60"
-            >
-              {loading ? (
-                <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <>
-                  <SettingsIcon className="w-4 h-4" />
-                  Setup Demo Users
-                </>
-              )}
-            </button>
           </motion.div>
 
           {/* Right Panel - Info & Manual Login */}
@@ -369,16 +325,8 @@ export default function DemoLoginPage() {
                   💡 <span className="font-semibold">Tip:</span> Use the instant login buttons on the left for quick access!
                 </p>
                 <p className="text-center text-xs text-gray-500">
-                  Demo password: <span className="font-mono bg-gray-100 px-2 py-1 rounded">demo123</span>
+                  Demo users work without database connection - instant access!
                 </p>
-                {error && error.includes("not found") && (
-                  <button
-                    onClick={setupDemoUsers}
-                    className="mt-3 w-full py-2 px-4 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 text-xs font-medium rounded-lg transition-colors"
-                  >
-                    Click here to setup demo users
-                  </button>
-                )}
               </div>
             </div>
           </motion.div>

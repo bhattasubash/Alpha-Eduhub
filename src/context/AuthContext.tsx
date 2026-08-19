@@ -33,6 +33,7 @@ interface AuthContextValue {
   isLoading:       boolean;
   isAuthenticated: boolean;
   login:  (username: string, password: string) => Promise<void>;
+  demoLogin: (username: string) => Promise<void>;
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
 }
@@ -106,6 +107,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     window.location.href = roleRoutes[data.user.role] ?? "/";
   }, []);
 
+  // ── Demo Login (Direct login without authentication) ─────────────────────
+  const demoLogin = useCallback(async (username: string) => {
+    const res = await fetch("/api/auth/demo-login", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ username }),
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error ?? "Demo login failed");
+    }
+
+    const data = await res.json();
+    setUser(data.user);
+
+    // Redirect to role dashboard using window.location for immediate redirect
+    const roleRoutes: Record<string, string> = {
+      SUPER_ADMIN:  "/super-admin",
+      provider:     "/provider",
+      admin:        "/admin",
+      SCHOOL_ADMIN: "/admin",
+      teacher:      "/teacher",
+      TEACHER:      "/teacher",
+      student:      "/student",
+      STUDENT:      "/student",
+      PARENT:       "/parent",
+    };
+    window.location.href = roleRoutes[data.user.role] ?? "/";
+  }, []);
+
   // ── Logout ─────────────────────────────────────────────────────────────────
   const logout = useCallback(async () => {
     // Clear user state immediately for fast UI response
@@ -140,6 +173,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLoading,
         isAuthenticated: !!user,
         login,
+        demoLogin,
         logout,
         refresh,
       }}

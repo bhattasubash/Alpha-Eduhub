@@ -15,7 +15,7 @@ const demoUsers = [
 
 
 export default function SignInPage() {
-  const { login } = useAuth();
+  const { login, demoLogin } = useAuth();
 
   const [identifier, setIdentifier] = useState(""); // email or username
   const [password,   setPassword]   = useState("");
@@ -51,19 +51,11 @@ export default function SignInPage() {
     setLoading(true);
     
     try {
-      // Use the existing authentication system
-      await login(demo.username, demo.password);
+      // Use direct demo login (no authentication required)
+      await demoLogin(demo.username);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Login failed";
-      
-      // Check if it's a database connection error
-      if (errorMessage.includes("connect") || errorMessage.includes("database") || errorMessage.includes("ECONNREFUSED")) {
-        setError("Database not connected. Please set up your PostgreSQL database in .env file");
-      } else if (errorMessage.includes("Invalid credentials")) {
-        setError(`Demo user not found. Run setup to create demo users.`);
-      } else {
-        setError(errorMessage);
-      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
