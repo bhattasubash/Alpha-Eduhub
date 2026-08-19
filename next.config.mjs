@@ -13,11 +13,6 @@ const nextConfig = {
     config.resolve.alias.canvas = false;
     config.externals.push('canvas', 'encoding');
     
-    // Ignore Three.js and Three Fiber during server-side build
-    if (isServer) {
-      config.externals.push('@react-three/fiber', '@react-three/drei', 'three');
-    }
-    
     return config;
   },
   // Serverless optimization
