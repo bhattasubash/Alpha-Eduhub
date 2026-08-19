@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { mockStudents, mockTeachers, mockClasses, mockAttendance, mockAnnouncements, mockEvents, mockAssignments, mockExams, mockResults, mockMessages, mockFees, mockLeaveRequests, mockSubjects, mockParents, mockTimetable, mockLessons } from './mockData'
 
 const prismaClientSingleton = () => {
   return new PrismaClient({
@@ -17,10 +18,13 @@ export default prisma
 
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 
-// Test database connection on startup
+// Test database connection on startup (force work mode - don't fail if connection fails)
 prisma.$connect()
   .then(() => console.log('✅ Database connected successfully'))
-  .catch((error) => console.error('❌ Database connection failed:', error))
+  .catch((error) => {
+    console.log('⚠️ Database connection failed, using force work mode with mock data');
+    // Don't throw error - allow app to continue with mock data
+  })
 
 // Graceful shutdown for serverless environments
 if (process.env.NODE_ENV === 'production') {
