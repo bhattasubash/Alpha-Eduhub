@@ -9,32 +9,32 @@ import { motion, AnimatePresence } from "framer-motion";
 const demoCredentials = [
   {
     role: "Super Admin",
-    username: "demo.superadmin@alphaeduhub.com",
-    password: "DemoSuperAdmin@123",
+    username: "superadmin@alphaeduhub.com",
+    password: "demo123",
     icon: Shield,
     color: "from-purple-500 to-pink-500",
     description: "Full system control & management"
   },
   {
     role: "School Admin", 
-    username: "demo.admin@alphaeduhub.com",
-    password: "DemoAdmin@123",
+    username: "admin@demoschool.edu",
+    password: "demo123",
     icon: Users,
     color: "from-blue-500 to-cyan-500",
     description: "School operations & oversight"
   },
   {
     role: "Teacher",
-    username: "demo.teacher@alphaeduhub.com", 
-    password: "DemoTeacher@123",
+    username: "teacher@demoschool.edu", 
+    password: "demo123",
     icon: GraduationCap,
     color: "from-green-500 to-emerald-500",
     description: "Classroom management & teaching"
   },
   {
     role: "Student",
-    username: "demo.student@alphaeduhub.com",
-    password: "DemoStudent@123",
+    username: "student@demoschool.edu",
+    password: "demo123",
     icon: Sparkles,
     color: "from-orange-500 to-yellow-500",
     description: "Learning portal & activities"

@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     const demoUsers = [
       {
         username: "superadmin",
-        email: "superadmin@alphaedu.com",
+        email: "superadmin@alphaeduhub.com",
         role: "SUPER_ADMIN" as const,
         schoolId: null as string | null,
       },
