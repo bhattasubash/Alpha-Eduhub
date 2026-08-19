@@ -20,18 +20,9 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '4mb',
     },
-    // Allow deployment even with errors
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
   },
-  // Optimize static generation
-  output: 'standalone',
+  // Optimize static generation (commented out for Vercel compatibility)
+  // output: 'standalone', // Not compatible with Vercel
   // Memory optimization
   swcMinify: true,
   // Build optimizations
