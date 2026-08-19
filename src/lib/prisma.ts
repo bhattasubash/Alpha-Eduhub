@@ -17,6 +17,11 @@ export default prisma
 
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 
+// Test database connection on startup
+prisma.$connect()
+  .then(() => console.log('✅ Database connected successfully'))
+  .catch((error) => console.error('❌ Database connection failed:', error))
+
 // Graceful shutdown for serverless environments
 if (process.env.NODE_ENV === 'production') {
   process.on('beforeExit', async () => {
