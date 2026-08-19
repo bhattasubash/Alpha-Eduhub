@@ -35,10 +35,10 @@
     "next": "14.2.5",
     "next-cloudinary": "^6.13.0",
     "prisma": "^5.19.1",
-    "react": "^18",
+    "react": "^18.2.0",
     "react-big-calendar": "^1.13.2",
     "react-calendar": "^5.0.0",
-    "react-dom": "^18",
+    "react-dom": "^18.2.0",
     "react-hook-form": "^7.52.2",
     "react-toastify": "^10.0.5",
     "recharts": "^2.12.7",
@@ -61,5 +61,16 @@
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
+  "overrides": {
+    "@radix-ui/react-compose-refs": {
+      "react": "^18.2.0"
+    },
+    "@radix-ui/react-slot": {
+      "react": "^18.2.0"
+    },
+    "@radix-ui/react-progress": {
+      "react": "^18.2.0"
+    }
   }
 }
