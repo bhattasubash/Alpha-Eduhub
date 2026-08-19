@@ -21,25 +21,16 @@ const PUBLIC_PATHS = [
   "/api/auth/refresh-token",
   "/api/auth/me",
   "/api/auth/logout",
+  "/api/auth/demo-login",
   "/api/demo-request",
   "/api/setup-demo",
   "/api/debug-role",
-  "/api/demo-login",
   "/api/demo-logout",
 ];
 
 function isPublic(pathname: string): boolean {
   // Check exact matches
   if (PUBLIC_PATHS.some((p) => pathname === p)) return true;
-  
-  // Check for dashboard subpages (make all dashboard routes public for demo)
-  if (pathname.startsWith("/admin") || 
-      pathname.startsWith("/teacher") || 
-      pathname.startsWith("/student") || 
-      pathname.startsWith("/parent") || 
-      pathname.startsWith("/super-admin")) {
-    return true;
-  }
   
   // Check for path prefixes
   return PUBLIC_PATHS.some((p) => pathname.startsWith(`${p}/`));
@@ -76,11 +67,6 @@ function roleDashboard(role: string): string {
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-
-  // Skip middleware entirely for API routes - let them handle auth internally
-  if (pathname.startsWith("/api/")) {
-    return NextResponse.next();
-  }
 
   // Skip middleware during build time to prevent deployment errors
   if (process.env.NEXT_PHASE === "phase-production-build" || 
