@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   LayoutDashboard,
@@ -76,6 +76,7 @@ const navSections = [
 
 export default function SuperAdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
 
   function isActive(href: string) {
@@ -161,15 +162,17 @@ export default function SuperAdminSidebar() {
 
         {/* Footer */}
         <div className="border-t border-white/5 p-2 space-y-0.5">
-          <form action="/api/auth/logout" method="POST">
-            <button
-              type="submit"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all w-full"
-            >
-              <LogOut className="w-5 h-5 flex-shrink-0" />
+          <button
+            onClick={() => {
+              fetch("/api/auth/logout", { method: "POST", credentials: "include" })
+                .catch(() => console.log("Logout failed"));
+              window.location.href = "/sign-in";
+            }}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all w-full"
+          >
+            <LogOut className="w-5 h-5 flex-shrink-0" />
               {!collapsed && <span>Sign Out</span>}
             </button>
-          </form>
         </div>
 
         {/* Collapse toggle */}

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getRole } from "@/lib/getRole";
+import LogoutMenuItem from "./LogoutMenuItem";
 
 const menuItems = [
   {
@@ -66,6 +67,18 @@ const Menu = async () => {
           </span>
           {section.items.map((item) => {
             if (!item.visible.includes(role)) return null;
+            
+            // Special handling for logout item
+            if (item.label === "Logout") {
+              return (
+                <LogoutMenuItem
+                  key={item.label + item.href}
+                  icon={item.icon}
+                  label={item.label}
+                />
+              );
+            }
+            
             return (
               <Link
                 href={item.href}

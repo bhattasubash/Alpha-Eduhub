@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Play, Layers, Building2, Zap, Headset, GraduationCap, Shield, TrendingUp, Users, Award } from "lucide-react";
+import { ArrowRight, Play, Layers, Building2, Zap, Headset, GraduationCap, Shield, TrendingUp, Users, Award, Cpu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import DemoModal from "./DemoModal";
@@ -109,24 +109,38 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-14"
+              className="flex flex-wrap gap-3 justify-center lg:justify-start mb-14"
             >
               <Link
-                href="/sign-in"
-                className="group inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-white rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 shadow-2xl shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-105 hover-lift"
+                href="/demo-login"
+                className="group inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 shadow-2xl shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-105 hover-lift"
               >
-                Start for Free
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <GraduationCap className="w-4 h-4" />
+                Try Demo Login
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link
+                href="/sign-in"
+                className="group inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-300 hover-lift"
+              >
+                Sign In
               </Link>
               <button
                 onClick={() => setDemoOpen(true)}
-                className="group inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-white rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-300 hover-lift"
+                className="group inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-300 hover-lift"
               >
-                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                  <Play className="w-4 h-4 text-white fill-white" />
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                  <Play className="w-3 h-3 text-white fill-white" />
                 </div>
                 Watch Demo
               </button>
+              <Link
+                href="#technical-architecture"
+                className="group inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white rounded-2xl border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 transition-all duration-300 hover-lift"
+              >
+                <Cpu className="w-4 h-4 text-blue-400" />
+                Tech Architecture
+              </Link>
             </motion.div>
 
             {/* Feature highlights row */}

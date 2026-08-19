@@ -1,13 +1,18 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function LogoutPage() {
-  const { logout } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    logout();
+    // Call logout API in background without waiting
+    fetch("/api/auth/logout", { method: "POST", credentials: "include" })
+      .catch(() => console.log("Logout API call failed"));
+    
+    // Redirect immediately using window.location for force redirect
+    window.location.href = "/sign-in";
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

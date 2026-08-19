@@ -1,9 +1,6 @@
 /**
- * Prisma seed — creates only the super admin account.
+ * Prisma seed — creates demo accounts for Alpha Edu Hub
  * Run with: npx prisma db seed
- *
- * ⚠  This seed is for initial setup only.
- *    Change the password immediately after first login.
  */
 
 import fs from "fs";
@@ -31,25 +28,87 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("🌱  Seeding database…");
+  console.log("🌱  Seeding database with demo accounts…");
 
-  // ── Super Admin account only ───────────────────────────────────────────────
-  const superAdminHash = await bcrypt.hash("SuperAdmin@123!", 12);
-  const superAdminUser = await prisma.user.upsert({
-    where:  { username: "superadmin" },
-    update: {},
-    create: {
-      username:     "superadmin",
-      email:        "superadmin@alphaedu.com",
-      passwordHash: superAdminHash,
-      role:         "SUPER_ADMIN",
-      schoolId:     null,
-    },
+  // ── Demo School ─────────────────────────────────────────────────────────────
+  let demoSchool = await prisma.school.findFirst({
+    where: { name: "Demo School" }
   });
-  console.log("✅  Super Admin user:", superAdminUser.username);
-  console.log("\n🎉  Seed complete!");
-  console.log("\n  Login credentials:");
-  console.log("  Super Admin → username: superadmin  password: SuperAdmin@123!");
+
+  if (!demoSchool) {
+    demoSchool = await prisma.school.create({
+      data: {
+        name: "Demo School",
+        address: "123 Education Street",
+        phone: "+1-234-567-8900",
+        email: "info@demoschool.edu",
+      },
+    });
+    console.log("✅  Demo school created:", demoSchool.name);
+  } else {
+    console.log("✅  Demo school already exists:", demoSchool.name);
+  }
+
+  // ── Demo Users with proper credentials ───────────────────────────────────────
+  const demoUsers = [
+    {
+      username: 'demo.superadmin@alphaeduhub.com',
+      email: 'demo.superadmin@alphaeduhub.com',
+      password: 'DemoSuperAdmin@123',
+      role: 'SUPER_ADMIN' as const,
+      schoolId: null,
+    },
+    {
+      username: 'demo.admin@alphaeduhub.com',
+      email: 'demo.admin@alphaeduhub.com',
+      password: 'DemoAdmin@123',
+      role: 'SCHOOL_ADMIN' as const,
+      schoolId: demoSchool.id,
+    },
+    {
+      username: 'demo.teacher@alphaeduhub.com',
+      email: 'demo.teacher@alphaeduhub.com',
+      password: 'DemoTeacher@123',
+      role: 'TEACHER' as const,
+      schoolId: demoSchool.id,
+    },
+    {
+      username: 'demo.student@alphaeduhub.com',
+      email: 'demo.student@alphaeduhub.com',
+      password: 'DemoStudent@123',
+      role: 'STUDENT' as const,
+      schoolId: demoSchool.id,
+    },
+  ];
+
+  for (const userData of demoUsers) {
+    try {
+      const passwordHash = await bcrypt.hash(userData.password, 12);
+      
+      const user = await prisma.user.upsert({
+        where: { username: userData.username },
+        update: { passwordHash },
+        create: {
+          username: userData.username,
+          email: userData.email,
+          passwordHash,
+          role: userData.role,
+          schoolId: userData.schoolId,
+        },
+      });
+      
+      console.log(`✅  Demo user created/updated: ${user.username} (${user.role})`);
+    } catch (error) {
+      console.error(`❌  Failed to create user ${userData.username}:`, error);
+    }
+  }
+
+  console.log("\n🎉  Demo accounts seed complete!");
+  console.log("\n  Demo Login Credentials:");
+  console.log("  👑 Super Admin → demo.superadmin@alphaeduhub.com / DemoSuperAdmin@123");
+  console.log("  🛡️ School Admin → demo.admin@alphaeduhub.com / DemoAdmin@123");
+  console.log("  👨‍🏫 Teacher → demo.teacher@alphaeduhub.com / DemoTeacher@123");
+  console.log("  👨‍🎓 Student → demo.student@alphaeduhub.com / DemoStudent@123");
 }
 
 main()

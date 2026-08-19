@@ -40,7 +40,9 @@ export default async function DashboardLayout({
     role === "provider"     ? "/provider"    :
     role === "SCHOOL_ADMIN" ? "/admin"       :
     role === "TEACHER"      ? "/teacher"     :
+    role === "teacher"      ? "/teacher"     :
     role === "STUDENT"      ? "/student"     :
+    role === "student"      ? "/student"     :
     role === "PARENT"       ? "/parent"      :
     `/${role}`;
 
@@ -55,6 +57,41 @@ export default async function DashboardLayout({
           impersonatedUsername={session.username}
         />
         {children}
+      </div>
+    );
+  }
+
+  // Students and parents also have custom layout (similar to teachers)
+  if (role === "STUDENT" || role === "student" || role === "PARENT") {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <ImpersonationBanner 
+          isImpersonating={isSchoolImpersonating} 
+          schoolName={schoolName} 
+          isDeepImpersonating={isDeepImpersonating}
+          impersonatedUsername={session.username}
+        />
+        <div className="flex-1 h-screen flex">
+          {/* Sidebar */}
+          <div className="w-[14%] md:w-[8%] lg:w-[16%] xl:w-[14%] p-4">
+            <Link
+              href={homeHref}
+              className="flex items-center justify-center lg:justify-start gap-2"
+            >
+              <Image src="/logo.png" alt="logo" width={32} height={32} />
+              <span className="hidden lg:block font-bold text-base text-gray-800">
+                Alpha Edu Hub
+              </span>
+            </Link>
+            <Menu />
+          </div>
+
+          {/* Main content */}
+          <div className="w-[86%] md:w-[92%] lg:w-[84%] xl:w-[86%] bg-[#F7F8FA] overflow-scroll flex flex-col">
+            <Navbar />
+            {children}
+          </div>
+        </div>
       </div>
     );
   }

@@ -8,6 +8,7 @@ import DashboardPreview from "@/components/landing/DashboardPreview";
 import WebApp from "@/components/landing/WebApp";
 import Testimonials from "@/components/landing/Testimonials";
 import Pricing from "@/components/landing/Pricing";
+import TechnicalArchitecture from "@/components/landing/TechnicalArchitecture";
 import FAQ from "@/components/landing/FAQ";
 import ContactCTA from "@/components/landing/ContactCTA";
 import Footer from "@/components/landing/Footer";
@@ -31,6 +32,7 @@ export default function LandingPage() {
         <WebApp />
         <Testimonials />
         <Pricing />
+        <TechnicalArchitecture />
         <FAQ />
         <ContactCTA />
         <Footer />

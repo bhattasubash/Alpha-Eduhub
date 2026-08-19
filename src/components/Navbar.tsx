@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getSession, getCurrentSchoolId } from "@/lib/getRole";
 import NavbarSearch from "./NavbarSearch";
+import LogoutButton from "./LogoutButton";
 import prisma from "@/lib/prisma";
 
 const Navbar = async () => {
@@ -45,10 +46,7 @@ const Navbar = async () => {
           <span className="text-[10px] text-gray-500 capitalize">{roleLabel}</span>
         </div>
 
-        <Link href="/logout" title="Sign out">
-          <Image src="/logout.png" alt="Sign out" width={20} height={20}
-            className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity" />
-        </Link>
+        <LogoutButton />
       </div>
     </div>
   );

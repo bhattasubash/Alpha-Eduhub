@@ -128,7 +128,11 @@ export default function TeacherSidebar({
       {/* Bottom Actions */}
       <div className="border-t border-gray-200/50 p-3 space-y-1">
         <button
-          onClick={() => router.push("/logout")}
+          onClick={() => {
+            fetch("/api/auth/logout", { method: "POST", credentials: "include" })
+              .catch(() => console.log("Logout failed"));
+            window.location.href = "/sign-in";
+          }}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 hover:bg-red-50/80 transition-all hover-lift"
         >
           <LogOut className="h-5 w-5" />

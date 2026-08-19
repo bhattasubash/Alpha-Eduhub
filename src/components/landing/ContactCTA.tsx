@@ -66,9 +66,9 @@ export default function ContactCTA() {
 
           {/* Contact details */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-white/40 text-sm">
-            <a href="mailto:alphaeduhub360@gmail.com" className="flex items-center gap-2 hover:text-white/70 transition-colors">
+            <a href="mailto:bilalhyder889@gmail.com" className="flex items-center gap-2 hover:text-white/70 transition-colors">
               <Mail className="w-4 h-4" />
-              alphaeduhub360@gmail.com
+              bilalhyder889@gmail.com
             </a>
             <div className="hidden sm:block w-1 h-1 rounded-full bg-white/20" />
             <a href="tel:+918277300451" className="flex items-center gap-2 hover:text-white/70 transition-colors">

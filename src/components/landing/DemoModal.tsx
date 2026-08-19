@@ -47,7 +47,7 @@ function Field({
   required,
   error,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   id: FieldKey;
   type?: string;

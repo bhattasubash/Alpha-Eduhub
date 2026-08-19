@@ -1,28 +1,38 @@
 /**
  * POST /api/auth/logout
- * Deletes the refresh token from DB and clears both auth cookies.
+ * Clears both auth cookies immediately for fast logout.
+ * Token cleanup happens in background without blocking the response.
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { clearAuthCookies } from "@/lib/auth";
-import { hashRefreshToken } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
     const refreshToken = req.cookies.get("refresh_token")?.value;
 
+    // Clear cookies immediately for fast response
+    const res = NextResponse.json({ success: true });
+    clearAuthCookies(res);
+
+    // Delete token from DB in background (non-blocking)
     if (refreshToken) {
-      // Delete from DB — ignore error if token doesn't exist
-      const tokenHash = await hashRefreshToken(refreshToken);
-      await prisma.refreshToken.deleteMany({ where: { OR: [{ tokenHash }, { token: refreshToken }] } });
+      // Don't await this - let it happen in background
+      prisma.refreshToken.deleteMany({ 
+        where: { token: refreshToken } 
+      }).catch((error) => {
+        // Silently handle errors - logout should succeed regardless
+        console.log("Background token cleanup:", error);
+      });
     }
 
-    const res = NextResponse.redirect(new URL("/sign-in", req.url));
-    clearAuthCookies(res);
     return res;
   } catch (err) {
     console.error("[POST /api/auth/logout]", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    // Still clear cookies even if everything else fails
+    const res = NextResponse.json({ success: true });
+    clearAuthCookies(res);
+    return res;
   }
 }

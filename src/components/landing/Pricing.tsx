@@ -271,9 +271,9 @@ export default function Pricing() {
               <button
                 key={i}
                 onClick={() => {
-                  const carousel = document.querySelector('.scrollbar-hide');
+                  const carousel = document.querySelector('.scrollbar-hide') as HTMLElement;
                   if (carousel) {
-                    const cardWidth = carousel.offsetWidth * 0.85;
+                    const cardWidth = (carousel as any).offsetWidth * 0.85;
                     carousel.scrollTo({ left: i * cardWidth, behavior: 'smooth' });
                   }
                 }}

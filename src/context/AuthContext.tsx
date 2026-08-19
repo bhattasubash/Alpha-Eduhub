@@ -108,10 +108,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // ── Logout ─────────────────────────────────────────────────────────────────
   const logout = useCallback(async () => {
-    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    // Clear user state immediately for fast UI response
     setUser(null);
-    router.push("/sign-in");
-  }, [router]);
+    
+    // Call logout API in background (non-blocking)
+    fetch("/api/auth/logout", { method: "POST", credentials: "include" })
+      .catch((error) => console.log("Logout API call failed:", error));
+    
+    // Redirect immediately using window.location for force redirect
+    window.location.href = "/sign-in";
+  }, []);
 
   // ── Refresh ────────────────────────────────────────────────────────────────
   const refresh = useCallback(async () => {

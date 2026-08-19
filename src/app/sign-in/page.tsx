@@ -1,9 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, EyeOff, GraduationCap, Lock, User, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, GraduationCap, Lock, User, ArrowLeft, Shield, Users, Sparkles, Zap, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+
+const demoUsers = [
+  { role: "Super Admin", username: "demo.superadmin@alphaeduhub.com", password: "DemoSuperAdmin@123", icon: Shield, color: "from-purple-500 to-pink-500" },
+  { role: "School Admin", username: "demo.admin@alphaeduhub.com", password: "DemoAdmin@123", icon: Users, color: "from-blue-500 to-cyan-500" },
+  { role: "Teacher", username: "demo.teacher@alphaeduhub.com", password: "DemoTeacher@123", icon: GraduationCap, color: "from-green-500 to-emerald-500" },
+  { role: "Student", username: "demo.student@alphaeduhub.com", password: "DemoStudent@123", icon: Sparkles, color: "from-orange-500 to-yellow-500" }
+];
 
 
 
@@ -32,6 +39,31 @@ export default function SignInPage() {
       // Navigation is handled inside AuthContext.login
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Sign in failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDemoLogin(demo: typeof demoUsers[0]) {
+    setIdentifier(demo.username);
+    setPassword(demo.password);
+    setError("");
+    setLoading(true);
+    
+    try {
+      // Use the existing authentication system
+      await login(demo.username, demo.password);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Login failed";
+      
+      // Check if it's a database connection error
+      if (errorMessage.includes("connect") || errorMessage.includes("database") || errorMessage.includes("ECONNREFUSED")) {
+        setError("Database not connected. Please set up your PostgreSQL database in .env file");
+      } else if (errorMessage.includes("Invalid credentials")) {
+        setError(`Demo user not found. Run setup to create demo users.`);
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       setLoading(false);
     }
@@ -122,6 +154,61 @@ export default function SignInPage() {
                   : "Sign In"}
               </button>
             </form>
+
+            {/* Demo Login Section */}
+            <div className="pt-6 border-t border-gray-200">
+              <div className="text-center mb-4">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Quick Demo Access</p>
+                <p className="text-xs text-gray-400">Click any role for instant demo login</p>
+              </div>
+              
+              <div className="grid grid-cols-3 gap-2">
+                {demoUsers.slice(0, 3).map((demo) => {
+                  const Icon = demo.icon;
+                  return (
+                    <button
+                      key={demo.role}
+                      onClick={() => handleDemoLogin(demo)}
+                      disabled={loading}
+                      className="flex flex-col items-center gap-1 p-3 rounded-xl border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50/50 transition-all duration-200 disabled:opacity-50"
+                    >
+                      <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${demo.color} flex items-center justify-center`}>
+                        <Icon className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-xs font-medium text-gray-700">{demo.role}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              
+              <div className="grid grid-cols-2 gap-2 mt-2">
+                {demoUsers.slice(3).map((demo) => {
+                  const Icon = demo.icon;
+                  return (
+                    <button
+                      key={demo.role}
+                      onClick={() => handleDemoLogin(demo)}
+                      disabled={loading}
+                      className="flex flex-col items-center gap-1 p-3 rounded-xl border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50/50 transition-all duration-200 disabled:opacity-50"
+                    >
+                      <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${demo.color} flex items-center justify-center`}>
+                        <Icon className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-xs font-medium text-gray-700">{demo.role}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="mt-4 text-center">
+                <Link 
+                  href="/demo-login" 
+                  className="text-xs text-indigo-600 hover:text-indigo-700 font-medium inline-flex items-center gap-1"
+                >
+                  View full demo login page →
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -131,6 +218,20 @@ export default function SignInPage() {
             Back to home
           </Link>
         </p>
+
+        {/* LinkedIn Profile */}
+        <div className="mt-4 text-center animate-slide-up" style={{ animationDelay: "250ms" }}>
+          <a 
+            href="https://www.linkedin.com/in/mahammad-bilal-hyder-493295356" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#0077B5] hover:bg-[#006097] text-white rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 shadow-lg"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Connect on LinkedIn
+          </a>
+          <p className="text-xs text-gray-400 mt-2">Built by Mahammad Bilal Hyder</p>
+        </div>
       </div>
     </div>
   );
