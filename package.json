@@ -15,6 +15,9 @@
     "seed:dev": "npx tsx prisma/seed-dev.ts",
     "postinstall": "prisma generate"
   },
+  "installConfig": {
+    "legacyPeerDeps": true
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
     "@prisma/client": "^5.19.1",
