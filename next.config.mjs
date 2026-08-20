@@ -21,6 +21,8 @@ const nextConfig = {
       bodySizeLimit: '4mb',
     },
   },
+  // Force dynamic rendering for API routes to prevent static generation issues
+  output: undefined, // Let Vercel handle output mode
   // Optimize static generation (commented out for Vercel compatibility)
   // output: 'standalone', // Not compatible with Vercel
   // Memory optimization

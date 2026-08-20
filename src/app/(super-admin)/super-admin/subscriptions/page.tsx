@@ -4,6 +4,8 @@ import { CreditCard, CheckCircle2, Clock, XCircle, AlertTriangle } from "lucide-
 import prisma from "@/lib/prisma";
 import { requireSession } from "@/lib/getRole";
 
+export const dynamic = 'force-dynamic';
+
 const PAGE_SIZE = 20;
 
 interface PageProps {

@@ -4,6 +4,9 @@ import prisma from "@/lib/prisma";
 import { requireSession } from "@/lib/getRole";
 import CreateAnnouncementForm from "@/components/super-admin/CreateAnnouncementForm";
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 export default async function AnnouncementsPage() {
   try {
     await requireSession(["SUPER_ADMIN"]);

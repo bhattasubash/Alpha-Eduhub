@@ -3,6 +3,8 @@ import { requireSession } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 import { Database, HardDrive, Server, Activity, CheckCircle2, ShieldCheck, HardDriveDownload } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 export default async function DatabaseHealthPage() {
   try {
     await requireSession(["SUPER_ADMIN"]);

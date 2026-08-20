@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { Blocks, Search, ToggleLeft, ToggleRight, Server, BookOpen, Bus, MessageSquare } from "lucide-react";
 import { requireSession } from "@/lib/getRole";
 
+export const dynamic = 'force-dynamic';
+
 const modules = [
   { id: "transport", name: "Transport Management", description: "Manage school buses, routes, and drivers.", icon: Bus, enabled: true },
   { id: "library", name: "Library System", description: "Track books, issue logs, and inventory.", icon: BookOpen, enabled: true },

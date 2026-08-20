@@ -4,6 +4,9 @@ import prisma from "@/lib/prisma";
 import { requireSession } from "@/lib/getRole";
 import AnalyticsCharts from "@/components/super-admin/AnalyticsCharts";
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 export default async function AnalyticsPage() {
   try {
     await requireSession(["SUPER_ADMIN"]);

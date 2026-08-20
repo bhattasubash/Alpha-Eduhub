@@ -3,6 +3,9 @@ import { ScrollText, Search } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { requireSession } from "@/lib/getRole";
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 const PAGE_SIZE = 30;
 
 interface PageProps {

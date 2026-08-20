@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { ShieldCheck, Lock, Globe, KeyRound, AlertTriangle, Fingerprint, Save } from "lucide-react";
 import { requireSession } from "@/lib/getRole";
 
+export const dynamic = 'force-dynamic';
+
 export default async function SecurityPage() {
   let session;
   try {

@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { requireSession } from "@/lib/getRole";
 import PlatformSettingsForm from "@/components/super-admin/PlatformSettingsForm";
 
+export const dynamic = 'force-dynamic';
+
 const DEFAULT_SETTINGS = [
   { key: "platform_name",     label: "Platform Name",     category: "general", defaultValue: "Alpha Edu Hub",           type: "text"  },
   { key: "platform_tagline",  label: "Platform Tagline",  category: "general", defaultValue: "Smart Schools. Smarter Future.", type: "text" },

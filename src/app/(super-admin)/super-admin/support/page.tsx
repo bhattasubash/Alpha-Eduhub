@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { requireSession } from "@/lib/getRole";
 import TicketStatusButton from "@/components/super-admin/TicketStatusButton";
 
+export const dynamic = 'force-dynamic';
+
 const PAGE_SIZE = 20;
 
 interface PageProps {

@@ -3,6 +3,9 @@ import { requireSession } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 import { LeaveStatus } from "@prisma/client";
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const session = await requireSession(["admin", "SCHOOL_ADMIN", "SUPER_ADMIN"]);

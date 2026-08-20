@@ -19,12 +19,15 @@ export default prisma
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 
 // Test database connection on startup (force work mode - don't fail if connection fails)
-prisma.$connect()
-  .then(() => console.log('✅ Database connected successfully'))
-  .catch((error) => {
-    console.log('⚠️ Database connection failed, using force work mode with mock data');
-    // Don't throw error - allow app to continue with mock data
-  })
+// Skip connection test during build time to prevent build failures
+if (process.env.NODE_ENV !== 'build' && process.env.NODE_ENV !== 'test') {
+  prisma.$connect()
+    .then(() => console.log('✅ Database connected successfully'))
+    .catch((error) => {
+      console.log('⚠️ Database connection failed, using force work mode with mock data');
+      // Don't throw error - allow app to continue with mock data
+    })
+}
 
 // Graceful shutdown for serverless environments
 if (process.env.NODE_ENV === 'production') {

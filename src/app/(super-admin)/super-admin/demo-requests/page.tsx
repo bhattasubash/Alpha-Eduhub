@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import { requireSession } from "@/lib/getRole";
 import { GraduationCap, Mail, Phone, Building2, User, Users, Calendar, Clock } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 export default async function DemoRequestsPage() {
   try {
     await requireSession(["SUPER_ADMIN"]);

@@ -7,6 +7,8 @@ import SchoolSelector from "@/components/super-admin/SchoolSelector";
 
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
   searchParams: { schoolId?: string; purge?: string };
 }

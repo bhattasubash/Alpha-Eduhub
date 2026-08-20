@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { Globe, Plus, Save, Languages, CheckCircle2 } from "lucide-react";
 import { requireSession } from "@/lib/getRole";
 
+export const dynamic = 'force-dynamic';
+
 const LANGUAGES = [
   { code: "en", name: "English", nativeName: "English", enabled: true, progress: 100 },
   { code: "es", name: "Spanish", nativeName: "Español", enabled: true, progress: 85 },

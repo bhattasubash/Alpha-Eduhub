@@ -2,6 +2,9 @@ import { redirect } from "next/navigation";
 import { HardDrive, Download, RotateCcw, DatabaseBackup, Clock, CheckCircle2, AlertTriangle } from "lucide-react";
 import { requireSession } from "@/lib/getRole";
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 // Mocking backups since Prisma schema might not be pushed yet
 const MOCK_BACKUPS = [
   { id: "1", fileName: "backup_prod_20240501.sql.gz", fileSize: 1024 * 1024 * 450, status: "COMPLETED", startedAt: new Date(Date.now() - 86400000 * 1), completedAt: new Date(Date.now() - 86400000 * 1 + 500000), triggeredBy: "SYSTEM" },

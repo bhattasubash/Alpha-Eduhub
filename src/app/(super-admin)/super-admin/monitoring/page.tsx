@@ -3,6 +3,8 @@ import { requireSession } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 import SystemHealthCards from "@/components/super-admin/SystemHealthCards";
 
+export const dynamic = 'force-dynamic';
+
 export default async function MonitoringPage() {
   try {
     await requireSession(["SUPER_ADMIN"]);

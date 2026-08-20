@@ -15,6 +15,9 @@ import UserDistributionChart from "@/components/super-admin/charts/UserDistribut
 import RecentSchoolsTable from "@/components/super-admin/RecentSchoolsTable";
 import RecentAuditLog from "@/components/super-admin/RecentAuditLog";
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 // ─── Data fetching ────────────────────────────────────────────────────────────
 
 async function getDashboardStats() {

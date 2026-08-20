@@ -10,6 +10,8 @@ import { requireSession } from "@/lib/getRole";
 import SchoolActionsMenu from "@/components/super-admin/SchoolActionsMenu";
 import CreateSchoolModal from "@/components/super-admin/CreateSchoolModal";
 
+export const dynamic = 'force-dynamic';
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function statusBadge(status: string) {

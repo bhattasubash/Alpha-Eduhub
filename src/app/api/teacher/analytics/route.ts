@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUserId, requireSession } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const session = await requireSession(["teacher", "TEACHER"]);

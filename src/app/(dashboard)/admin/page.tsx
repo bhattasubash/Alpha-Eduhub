@@ -9,6 +9,9 @@ import prisma from "@/lib/prisma";
 import { Ticket, CalendarDays, DollarSign, ArrowRight, GraduationCap, Users, CalendarCheck } from "lucide-react";
 import Link from "next/link";
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 const AdminPage = async ({
   searchParams,
 }: {

@@ -3,6 +3,8 @@ import { Radio, Plus, Megaphone, Clock, Trash2, Edit } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { requireSession } from "@/lib/getRole";
 
+export const dynamic = 'force-dynamic';
+
 export default async function BroadcastsPage() {
   let session;
   try {

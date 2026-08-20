@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { Book, Plus, Search, FileText, FolderOpen, Edit, Trash2, Eye } from "lucide-react";
 import { requireSession } from "@/lib/getRole";
 
+export const dynamic = 'force-dynamic';
+
 const MOCK_ARTICLES = [
   { id: "1", title: "Getting Started for School Admins", category: "Onboarding", status: "PUBLISHED", views: 1245, lastUpdated: new Date(Date.now() - 86400000 * 2) },
   { id: "2", title: "How to Configure Payment Gateways", category: "Billing", status: "DRAFT", views: 0, lastUpdated: new Date(Date.now() - 86400000 * 1) },

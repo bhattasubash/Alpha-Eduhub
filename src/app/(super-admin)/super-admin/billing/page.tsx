@@ -3,6 +3,8 @@ import { Receipt, Search, Filter, Download, ArrowUpRight, CheckCircle2, Clock } 
 import prisma from "@/lib/prisma";
 import { requireSession } from "@/lib/getRole";
 
+export const dynamic = 'force-dynamic';
+
 export default async function BillingPage() {
   let session;
   try {
