@@ -2,24 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyAccessToken } from "@/lib/auth-edge";
 import { getCanonicalRole } from "@/lib/roles";
 
-// Public routes that do not require authentication
-const PUBLIC_PATHS = [
+// Public paths that do not require authentication
+const PUBLIC_PATHS = new Set([
   "/",
+  "/landing",
+  "/app",
   "/sign-in",
   "/demo-login",
+  "/demo-dashboard",
   "/logout",
   "/unauthorized",
   "/continue",
-];
+]);
 
 const PUBLIC_API_PREFIXES = [
-  "/api/auth/login",
-  "/api/auth/demo-login",
-  "/api/auth/refresh-token",
-  "/api/auth/logout",
+  "/api/auth/",
   "/api/demo-request",
   "/api/demo-login",
   "/api/demo-logout",
+  "/api/setup-demo",
 ];
 
 export async function middleware(req: NextRequest) {
@@ -35,7 +36,7 @@ export async function middleware(req: NextRequest) {
     }
 
     // Allow public static pages
-    if (PUBLIC_PATHS.includes(pathname)) {
+    if (PUBLIC_PATHS.has(pathname)) {
       return NextResponse.next();
     }
 
@@ -52,7 +53,8 @@ export async function middleware(req: NextRequest) {
       if (pathname.startsWith("/api/")) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
-      const signInUrl = new URL("/sign-in", req.url);
+      const signInUrl = req.nextUrl.clone();
+      signInUrl.pathname = "/sign-in";
       signInUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(signInUrl);
     }
@@ -63,30 +65,43 @@ export async function middleware(req: NextRequest) {
     // Super Admin route protection
     if (pathname.startsWith("/super-admin") || pathname.startsWith("/provider")) {
       if (canonicalRole !== "Super Admin") {
-        return NextResponse.redirect(new URL("/unauthorized", req.url));
+        const unauthUrl = req.nextUrl.clone();
+        unauthUrl.pathname = "/unauthorized";
+        return NextResponse.redirect(unauthUrl);
       }
     }
 
     // Admin route protection
     if (pathname.startsWith("/admin")) {
       if (canonicalRole !== "Super Admin" && canonicalRole !== "Admin") {
-        return NextResponse.redirect(new URL("/unauthorized", req.url));
+        const unauthUrl = req.nextUrl.clone();
+        unauthUrl.pathname = "/unauthorized";
+        return NextResponse.redirect(unauthUrl);
       }
     }
 
     return NextResponse.next();
   } catch (error) {
+    // Bulletproof catch: never allow middleware to crash with unhandled exception
     console.error("[Middleware Error]:", error);
     if (req.nextUrl.pathname.startsWith("/api/")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    return NextResponse.redirect(new URL("/sign-in", req.url));
+    const signInUrl = req.nextUrl.clone();
+    signInUrl.pathname = "/sign-in";
+    return NextResponse.redirect(signInUrl);
   }
 }
 
 export const config = {
   matcher: [
-    // Match all routes except static files and _next
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    /*
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico, sitemap.xml, robots.txt
+     * - static file extensions (svg, png, jpg, jpeg, gif, webp, ico, css, js, etc.)
+     */
+    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff2?|ttf|eot)$).*)",
   ],
 };
