@@ -8,6 +8,9 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import { getRole, getCurrentSchoolId, getCurrentUserId } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+
+export const dynamic = 'force-dynamic';
+
 const assignmentSortOptions: SortOption[] = [
   { label: "Due Date (Soonest first)", field: "dueDate", order: "asc" },
   { label: "Due Date (Latest first)",  field: "dueDate", order: "desc" },
@@ -44,29 +47,37 @@ const AssignmentListPage = async ({
     } : {}),
   };
 
-  const [data, count, classList] = await Promise.all([
-    prisma.assignment.findMany({
-      where,
-      include: {
-        lesson: {
-          include: {
-            subject: { select: { name: true } },
-            class:   { select: { name: true } },
-            teacher: { select: { name: true, surname: true } },
+  let data: any[] = [];
+  let count = 0;
+  let classList: any[] = [];
+
+  try {
+    [data, count, classList] = await Promise.all([
+      prisma.assignment.findMany({
+        where,
+        include: {
+          lesson: {
+            include: {
+              subject: { select: { name: true } },
+              class:   { select: { name: true } },
+              teacher: { select: { name: true, surname: true } },
+            },
           },
         },
-      },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
-      orderBy,
-    }),
-    prisma.assignment.count({ where }),
-    prisma.class.findMany({
-      where: schoolId ? { schoolId } : {},
-      select: { id: true, name: true },
-      orderBy: { name: "asc" },
-    }),
-  ]);
+        take: ITEM_PER_PAGE,
+        skip: ITEM_PER_PAGE * (p - 1),
+        orderBy,
+      }),
+      prisma.assignment.count({ where }),
+      prisma.class.findMany({
+        where: schoolId ? { schoolId } : {},
+        select: { id: true, name: true },
+        orderBy: { name: "asc" },
+      }),
+    ]);
+  } catch (error) {
+    console.error("Database connection failed in AssignmentListPage:", error);
+  }
 
   const columns = [
     { header: "Subject & Title", accessor: "name" },

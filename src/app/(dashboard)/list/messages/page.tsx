@@ -6,6 +6,8 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import { getCurrentSchoolId } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 
+export const dynamic = 'force-dynamic';
+
 type MessageRow = {
   id: string;
   sender: string;

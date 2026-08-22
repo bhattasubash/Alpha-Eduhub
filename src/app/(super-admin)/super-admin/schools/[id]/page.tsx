@@ -20,33 +20,42 @@ export default async function SchoolDetailPage({ params }: PageProps) {
     redirect("/sign-in");
   }
 
-  const school = await prisma.school.findUnique({
-    where: { id: params.id },
-    include: {
-      admins: true,
-      subscription: true,
-      _count: {
-        select: {
-          students: true,
-          teachers: true,
-          parents: true,
-          classes: true,
-          subjects: true,
-          users: true,
+  let school: any = null;
+  let recentAuditLogs: any[] = [];
+
+  try {
+    school = await prisma.school.findUnique({
+      where: { id: params.id },
+      include: {
+        admins: true,
+        subscription: true,
+        _count: {
+          select: {
+            students: true,
+            teachers: true,
+            parents: true,
+            classes: true,
+            subjects: true,
+            users: true,
+          },
         },
       },
-    },
-  });
+    });
+
+    if (school) {
+      recentAuditLogs = await prisma.auditLog.findMany({
+        where: { schoolId: school.id },
+        orderBy: { createdAt: "desc" },
+        take: 10,
+      });
+    }
+  } catch (error) {
+    console.error("Database connection failed in SingleSchoolDetailPage:", error);
+  }
 
   if (!school) {
     redirect("/super-admin/schools");
   }
-
-  const recentAuditLogs = await prisma.auditLog.findMany({
-    where: { schoolId: school.id },
-    orderBy: { createdAt: "desc" },
-    take: 10,
-  });
 
   return (
     <div className="space-y-8">
@@ -155,7 +164,7 @@ export default async function SchoolDetailPage({ params }: PageProps) {
               <p className="text-white/30 text-xs py-2">No admin account assigned yet.</p>
             ) : (
               <div className="space-y-2">
-                {school.admins.map((adm) => (
+                {school.admins.map((adm: any) => (
                   <div key={adm.id} className="p-3 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between text-xs">
                     <div>
                       <p className="text-white font-medium">{adm.username}</p>

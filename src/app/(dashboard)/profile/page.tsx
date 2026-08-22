@@ -2,6 +2,8 @@ import { getSession } from "@/lib/getRole";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 
+export const dynamic = 'force-dynamic';
+
 const ProfilePage = async () => {
   const session = await getSession();
   if (!session) redirect("/sign-in");

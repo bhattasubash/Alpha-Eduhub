@@ -12,6 +12,7 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { BookOpen, GraduationCap, MapPin, Phone } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
 
 type TeacherRow = {
   id: string; name: string; surname: string; email: string | null;
@@ -70,29 +71,38 @@ const TeacherListPage = async ({
     } : {}),
   };
 
-  const [data, count, subjects, classes] = await Promise.all([
-    prisma.teacher.findMany({
-      where,
-      include: {
-        subjects: { select: { name: true } },
-        classes:  { select: { name: true } },
-      },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
-      orderBy,
-    }),
-    prisma.teacher.count({ where }),
-    prisma.subject.findMany({
-      where: schoolId ? { schoolId } : {},
-      select: { id: true, name: true },
-      orderBy: { name: "asc" },
-    }),
-    prisma.class.findMany({
-      where: schoolId ? { schoolId } : {},
-      select: { id: true, name: true },
-      orderBy: { name: "asc" },
-    }),
-  ]);
+  let data: any[] = [];
+  let count = 0;
+  let subjects: any[] = [];
+  let classes: any[] = [];
+
+  try {
+    [data, count, subjects, classes] = await Promise.all([
+      prisma.teacher.findMany({
+        where,
+        include: {
+          subjects: { select: { name: true } },
+          classes:  { select: { name: true } },
+        },
+        take: ITEM_PER_PAGE,
+        skip: ITEM_PER_PAGE * (p - 1),
+        orderBy,
+      }),
+      prisma.teacher.count({ where }),
+      prisma.subject.findMany({
+        where: schoolId ? { schoolId } : {},
+        select: { id: true, name: true },
+        orderBy: { name: "asc" },
+      }),
+      prisma.class.findMany({
+        where: schoolId ? { schoolId } : {},
+        select: { id: true, name: true },
+        orderBy: { name: "asc" },
+      }),
+    ]);
+  } catch (error) {
+    console.error("Database connection failed in TeacherListPage:", error);
+  }
 
   const columns = [
     { header: "Info",       accessor: "info" },

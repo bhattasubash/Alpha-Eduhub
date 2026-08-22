@@ -8,6 +8,8 @@ import { getRole, getCurrentSchoolId } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
+export const dynamic = 'force-dynamic';
+
 const classSortOptions: SortOption[] = [
   { label: "Class Name (A to Z)",  field: "name",     order: "asc" },
   { label: "Class Name (Z to A)",  field: "name",     order: "desc" },
@@ -35,20 +37,27 @@ const ClassListPage = async ({
     ...(search ? { name: { contains: search, mode: "insensitive" } } : {}),
   };
 
-  const [data, count] = await Promise.all([
-    prisma.class.findMany({
-      where,
-      include: {
-        grade:      { select: { level: true } },
-        supervisor: { select: { name: true, surname: true } },
-        _count:     { select: { students: true } },
-      },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
-      orderBy,
-    }),
-    prisma.class.count({ where }),
-  ]);
+  let data: any[] = [];
+  let count = 0;
+
+  try {
+    [data, count] = await Promise.all([
+      prisma.class.findMany({
+        where,
+        include: {
+          grade:      { select: { level: true } },
+          supervisor: { select: { name: true, surname: true } },
+          _count:     { select: { students: true } },
+        },
+        take: ITEM_PER_PAGE,
+        skip: ITEM_PER_PAGE * (p - 1),
+        orderBy,
+      }),
+      prisma.class.count({ where }),
+    ]);
+  } catch (error) {
+    console.error("Database connection failed in ClassListPage:", error);
+  }
 
   const columns = [
     { header: "Class Name",  accessor: "name" },

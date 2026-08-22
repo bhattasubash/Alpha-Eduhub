@@ -1,12 +1,18 @@
-/**
- * GET /api/debug
- * Debug endpoint to check environment and database connectivity
- */
-
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getServerSession } from "@/lib/auth";
+import { getCanonicalRole } from "@/lib/getRole";
 
 export async function GET(req: NextRequest) {
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ error: "Not Found" }, { status: 404 });
+  }
+
+  const session = await getServerSession();
+  if (!session || getCanonicalRole(session.role) !== "Super Admin") {
+    return NextResponse.json({ error: "Forbidden: Super Admin access required" }, { status: 403 });
+  }
+
   const debugInfo = {
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV,

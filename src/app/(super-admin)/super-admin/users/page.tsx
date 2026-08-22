@@ -116,7 +116,12 @@ export default async function UsersPage({ searchParams }: PageProps) {
   const schoolId = searchParams.schoolId ?? "";
   
   // 1. Fetch schools for selector
-  const schools = await prisma.school.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } });
+  let schools: { id: string; name: string }[] = [];
+  try {
+    schools = await prisma.school.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } });
+  } catch (error) {
+    console.error("Database connection failed in SuperAdminUsersPage schools fetch:", error);
+  }
 
   let groupedUsers = {
     admins: [] as any[],
@@ -129,40 +134,45 @@ export default async function UsersPage({ searchParams }: PageProps) {
 
   // 2. Fetch users for the selected school
   if (schoolId) {
-    const [users, studentRecords, school] = await Promise.all([
-      prisma.user.findMany({
-        where: { schoolId },
-        include: { refreshTokens: { select: { id: true }, take: 1 } },
-        orderBy: { username: "asc" }
-      }),
-      prisma.student.findMany({
-        where: { schoolId },
-        include: { class: true }
-      }),
-      prisma.school.findUnique({ where: { id: schoolId }, select: { name: true } })
-    ]);
+    try {
+      const [users, studentRecords, school] = await Promise.all([
+        prisma.user.findMany({
+          where: { schoolId },
+          include: { refreshTokens: { select: { id: true }, take: 1 } },
+          orderBy: { username: "asc" }
+        }),
+        prisma.student.findMany({
+          where: { schoolId },
+          include: { class: true }
+        }),
+        prisma.school.findUnique({ where: { id: schoolId }, select: { name: true } })
+      ]);
 
-    if (school) selectedSchoolName = school.name;
-    const studentMap = new Map(studentRecords.map(s => [s.id, s]));
+      if (school) selectedSchoolName = school.name;
+      const studentMap = new Map(studentRecords.map(s => [s.id, s]));
 
-    for (const u of users) {
-      const role = u.role.toLowerCase();
-      if (role === "admin" || u.role === "SCHOOL_ADMIN") {
-        groupedUsers.admins.push(u);
-      } else if (role === "teacher") {
-        groupedUsers.teachers.push(u);
-      } else if (role === "parent") {
-        groupedUsers.parents.push(u);
-      } else if (role === "student") {
-        const studentDetails = studentMap.get(u.id);
-        const className = studentDetails?.class?.name || "Unassigned";
-        if (!groupedUsers.studentsByClass[className]) {
-          groupedUsers.studentsByClass[className] = [];
+      for (const u of users) {
+        const role = u.role.toLowerCase();
+        if (role === "admin" || u.role === "SCHOOL_ADMIN") {
+          groupedUsers.admins.push(u);
+        } else if (role === "teacher") {
+          groupedUsers.teachers.push(u);
+        } else if (role === "parent") {
+          groupedUsers.parents.push(u);
+        } else if (role === "student") {
+          const studentInfo = studentMap.get(u.id);
+          const className = studentInfo?.class?.name || "Unassigned Class";
+          if (!groupedUsers.studentsByClass[className]) {
+            groupedUsers.studentsByClass[className] = [];
+          }
+          groupedUsers.studentsByClass[className].push({ ...u, studentData: studentInfo });
         }
-        groupedUsers.studentsByClass[className].push(u);
       }
+    } catch (error) {
+      console.error("Database connection failed in SuperAdminUsersPage school user details fetch:", error);
     }
   }
+
 
   const classNames = Object.keys(groupedUsers.studentsByClass).sort();
 

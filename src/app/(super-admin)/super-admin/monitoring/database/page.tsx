@@ -25,42 +25,43 @@ export default async function DatabaseHealthPage() {
   }
 
   // Fetch row counts for key database tables
-  const [
-    schoolCount,
-    userCount,
-    studentCount,
-    teacherCount,
-    parentCount,
-    auditCount,
-    tokenCount,
-    paymentCount,
-    invoiceCount,
-    feeCount,
-    schoolsStorage,
-  ] = await Promise.all([
-    prisma.school.count(),
-    prisma.user.count(),
-    prisma.student.count(),
-    prisma.teacher.count(),
-    prisma.parent.count(),
-    prisma.auditLog.count(),
-    prisma.refreshToken.count(),
-    prisma.payment.count(),
-    prisma.invoice.count(),
-    // @ts-ignore
-    prisma.feeStructure.count(),
-    prisma.school.findMany({
-      select: {
-        id: true,
-        name: true,
-        storageUsedMb: true,
-        storageLimitMb: true,
-        subscriptionPlan: true,
-        status: true,
-      },
-      orderBy: { storageUsedMb: "desc" },
-    }),
-  ]);
+  let schoolCount = 0, userCount = 0, studentCount = 0, teacherCount = 0, parentCount = 0;
+  let auditCount = 0, tokenCount = 0, paymentCount = 0, invoiceCount = 0, feeCount = 0;
+  let schoolsStorage: any[] = [];
+
+  try {
+    const counts = await Promise.all([
+      prisma.school.count(),
+      prisma.user.count(),
+      prisma.student.count(),
+      prisma.teacher.count(),
+      prisma.parent.count(),
+      prisma.auditLog.count(),
+      prisma.refreshToken.count(),
+      prisma.payment.count(),
+      prisma.invoice.count(),
+      // @ts-ignore
+      prisma.feeStructure.count(),
+      prisma.school.findMany({
+        select: {
+          id: true,
+          name: true,
+          storageUsedMb: true,
+          storageLimitMb: true,
+          subscriptionPlan: true,
+          status: true,
+        },
+        orderBy: { storageUsedMb: "desc" },
+      }),
+    ]);
+    [
+      schoolCount, userCount, studentCount, teacherCount, parentCount,
+      auditCount, tokenCount, paymentCount, invoiceCount, feeCount,
+      schoolsStorage,
+    ] = counts;
+  } catch (error) {
+    console.error("Database connection failed in DatabaseMonitoringPage:", error);
+  }
 
   const totalStorageUsedMb = schoolsStorage.reduce((acc, s) => acc + (s.storageUsedMb || 0), 0);
 

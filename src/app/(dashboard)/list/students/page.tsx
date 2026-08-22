@@ -12,6 +12,8 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { GraduationCap, MapPin, Phone, Download } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 const studentSortOptions: SortOption[] = [
   { label: "First Name (A to Z)", field: "name",     order: "asc" },
   { label: "First Name (Z to A)", field: "name",     order: "desc" },
@@ -54,26 +56,35 @@ const StudentListPage = async ({
     } : {}),
   };
 
-  const [data, count, classes, grades] = await Promise.all([
-    prisma.student.findMany({
-      where,
-      include: { class: { select: { name: true } } },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
-      orderBy,
-    }),
-    prisma.student.count({ where }),
-    prisma.class.findMany({
-      where: schoolId ? { schoolId } : {},
-      select: { id: true, name: true },
-      orderBy: { name: "asc" },
-    }),
-    prisma.grade.findMany({
-      where: schoolId ? { schoolId } : {},
-      select: { id: true, level: true },
-      orderBy: { level: "asc" },
-    }),
-  ]);
+  let data: any[] = [];
+  let count = 0;
+  let classes: any[] = [];
+  let grades: any[] = [];
+
+  try {
+    [data, count, classes, grades] = await Promise.all([
+      prisma.student.findMany({
+        where,
+        include: { class: { select: { name: true } } },
+        take: ITEM_PER_PAGE,
+        skip: ITEM_PER_PAGE * (p - 1),
+        orderBy,
+      }),
+      prisma.student.count({ where }),
+      prisma.class.findMany({
+        where: schoolId ? { schoolId } : {},
+        select: { id: true, name: true },
+        orderBy: { name: "asc" },
+      }),
+      prisma.grade.findMany({
+        where: schoolId ? { schoolId } : {},
+        select: { id: true, level: true },
+        orderBy: { level: "asc" },
+      }),
+    ]);
+  } catch (error) {
+    console.error("Database connection failed in StudentListPage:", error);
+  }
 
   const columns = [
     { header: "Info",       accessor: "info" },

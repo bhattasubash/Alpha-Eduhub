@@ -5,6 +5,8 @@ import { CalendarDays, GraduationCap, ArrowRight } from "lucide-react";
 import TimetableGrid from "@/components/TimetableGrid";
 import { saveTimetableEntry, deleteTimetableEntry } from "@/lib/timetableActions";
 
+export const dynamic = 'force-dynamic';
+
 const DAY_COLORS: Record<string, string> = {
   MONDAY:    "bg-blue-500",
   TUESDAY:   "bg-purple-500",

@@ -8,6 +8,8 @@ import { getRole, getCurrentSchoolId } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
+export const dynamic = 'force-dynamic';
+
 const announcementSortOptions: SortOption[] = [
   { label: "Date (Newest first)", field: "date",  order: "desc" },
   { label: "Date (Oldest first)", field: "date",  order: "asc" },
@@ -34,16 +36,23 @@ const AnnouncementListPage = async ({
     ...(search ? { title: { contains: search, mode: "insensitive" } } : {}),
   };
 
-  const [data, count] = await Promise.all([
-    prisma.announcement.findMany({
-      where,
-      include: { class: { select: { name: true } } },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
-      orderBy,
-    }),
-    prisma.announcement.count({ where }),
-  ]);
+  let data: any[] = [];
+  let count = 0;
+
+  try {
+    [data, count] = await Promise.all([
+      prisma.announcement.findMany({
+        where,
+        include: { class: { select: { name: true } } },
+        take: ITEM_PER_PAGE,
+        skip: ITEM_PER_PAGE * (p - 1),
+        orderBy,
+      }),
+      prisma.announcement.count({ where }),
+    ]);
+  } catch (error) {
+    console.error("Database connection failed in AnnouncementListPage:", error);
+  }
 
   const columns = [
     { header: "Title", accessor: "title" },

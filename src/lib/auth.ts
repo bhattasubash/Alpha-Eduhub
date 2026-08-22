@@ -21,13 +21,11 @@ const REFRESH_TOKEN_EXPIRY = "7d";    // long-lived
 function getSecret(envKey: string): Uint8Array {
   const val = process.env[envKey];
   if (!val) {
-    console.warn(`Missing env variable: ${envKey}, using fallback for development`);
-    // Use fallback secrets for development/deployment resilience
-    const fallbackSecrets: Record<string, string> = {
-      "JWT_ACCESS_SECRET": "fallback_access_secret_development_only",
-      "JWT_REFRESH_SECRET": "fallback_refresh_secret_development_only"
-    };
-    return new TextEncoder().encode(fallbackSecrets[envKey] || "fallback_secret");
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(`CRITICAL SECURITY ERROR: Missing environment variable: ${envKey}`);
+    }
+    console.error(`[AUTH] Missing environment variable: ${envKey}. Please configure it in your .env file.`);
+    throw new Error(`Missing required auth secret: ${envKey}`);
   }
   return new TextEncoder().encode(val);
 }

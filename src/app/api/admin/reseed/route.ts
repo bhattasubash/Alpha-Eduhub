@@ -8,6 +8,10 @@ import { getActiveSchoolId, requireSession } from "@/lib/getRole";
 // regular authenticated user, nor should it select an arbitrary tenant.
 export async function POST(_request: NextRequest) {
   try {
+    if (process.env.NODE_ENV === "production" && process.env.ALLOW_RESEED !== "true") {
+      return NextResponse.json({ error: "Reseeding is disabled in production" }, { status: 403 });
+    }
+
     const session = await requireSession(["admin", "SCHOOL_ADMIN", "SUPER_ADMIN"]);
 
     console.log("Starting database cleanup and re-seeding via API...");

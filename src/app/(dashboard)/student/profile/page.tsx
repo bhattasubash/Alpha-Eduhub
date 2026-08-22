@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from "react";
 import { User, Mail, Phone, MapPin, Lock, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";

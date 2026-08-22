@@ -40,30 +40,45 @@ export default async function SubscriptionsPage({ searchParams }: PageProps) {
     ...(status ? { subscriptionStatus: status as "ACTIVE" | "EXPIRED" | "CANCELLED" | "TRIAL" }       : {}),
   };
 
-  const [schools, total] = await Promise.all([
-    prisma.school.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: PAGE_SIZE,
-      select: {
-        id: true, name: true, email: true,
-        subscriptionPlan: true, subscriptionStatus: true,
-        subscriptionEndsAt: true, trialEndsAt: true, createdAt: true,
-        _count: { select: { students: true } },
-        subscription: {
-          select: { id: true, expiresAt: true, status: true },
-        },
-      },
-    }),
-    prisma.school.count({ where }),
-  ]);
+  let schools: any[] = [];
+  let total = 0;
+  let activeCount = 0;
+  let trialCount = 0;
+  let expiredCount = 0;
 
-  const [activeCount, trialCount, expiredCount] = await Promise.all([
-    prisma.school.count({ where: { subscriptionStatus: "ACTIVE" } }),
-    prisma.school.count({ where: { subscriptionStatus: "TRIAL" } }),
-    prisma.school.count({ where: { subscriptionStatus: "EXPIRED" } }),
-  ]);
+  try {
+    const [schoolsData, totalData] = await Promise.all([
+      prisma.school.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: PAGE_SIZE,
+        select: {
+          id: true, name: true, email: true,
+          subscriptionPlan: true, subscriptionStatus: true,
+          subscriptionEndsAt: true, trialEndsAt: true, createdAt: true,
+          _count: { select: { students: true } },
+          subscription: {
+            select: { id: true, expiresAt: true, status: true },
+          },
+        },
+      }),
+      prisma.school.count({ where }),
+    ]);
+    schools = schoolsData;
+    total = totalData;
+
+    const [aCount, tCount, eCount] = await Promise.all([
+      prisma.school.count({ where: { subscriptionStatus: "ACTIVE" } }),
+      prisma.school.count({ where: { subscriptionStatus: "TRIAL" } }),
+      prisma.school.count({ where: { subscriptionStatus: "EXPIRED" } }),
+    ]);
+    activeCount = aCount;
+    trialCount = tCount;
+    expiredCount = eCount;
+  } catch (error) {
+    console.error("Database connection failed in SuperAdminSubscriptionsPage:", error);
+  }
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
 

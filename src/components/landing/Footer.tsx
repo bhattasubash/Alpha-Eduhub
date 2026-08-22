@@ -62,15 +62,6 @@ export default function Footer() {
               >
                 {instagramIcon}
               </a>
-              <a
-                href="https://www.linkedin.com/in/mahammad-bilal-hyder-493295356"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className="w-9 h-9 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all"
-              >
-                <LinkedinIcon className="w-4 h-4" />
-              </a>
             </div>
           </div>
 
@@ -96,13 +87,13 @@ export default function Footer() {
 
         {/* Company Information */}
         <div className="border-t border-white/8 pt-8 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-blue-500/20">
                 <Globe className="w-5 h-5 text-blue-400" />
               </div>
               <div>
-                <p className="text-white/50 text-xs mb-1">Website</p>
+                <p className="text-white/50 text-xs mb-1">Platform</p>
                 <a 
                   href="https://alphaeduhub.in" 
                   target="_blank"
@@ -118,12 +109,12 @@ export default function Footer() {
                 <Mail className="w-5 h-5 text-purple-400" />
               </div>
               <div>
-                <p className="text-white/50 text-xs mb-1">Email</p>
+                <p className="text-white/50 text-xs mb-1">Support Email</p>
                 <a
-                  href="mailto:bilalhyder889@gmail.com"
+                  href="mailto:support@alphaeduhub.in"
                   className="text-white text-sm font-medium hover:text-purple-400 transition-colors"
                 >
-                  bilalhyder889@gmail.com
+                  support@alphaeduhub.in
                 </a>
               </div>
             </div>
@@ -140,22 +131,6 @@ export default function Footer() {
                   className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
                 >
                   @alphaeduhub
-                </a>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#0077B5]/20 to-[#006097]/20 flex items-center justify-center border border-[#0077B5]/20">
-                <LinkedinIcon className="w-5 h-5 text-[#0077B5]" />
-              </div>
-              <div>
-                <p className="text-white/50 text-xs mb-1">Developer</p>
-                <a 
-                  href="https://www.linkedin.com/in/mahammad-bilal-hyder-493295356"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white text-sm font-medium hover:text-[#0077B5] transition-colors"
-                >
-                  Mahammad Bilal Hyder
                 </a>
               </div>
             </div>

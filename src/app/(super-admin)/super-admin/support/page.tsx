@@ -50,27 +50,39 @@ export default async function SupportPage({ searchParams }: PageProps) {
     ...(priority ? { priority: priority as "LOW" | "MEDIUM" | "HIGH" | "CRITICAL" } : {}),
   };
 
-  const [tickets, total, counts] = await Promise.all([
-    prisma.supportTicket.findMany({
-      where,
-      orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
-      skip,
-      take: PAGE_SIZE,
-      include: {
-        school: { select: { name: true } },
-        _count: { select: { messages: true } },
-      },
-    }),
-    prisma.supportTicket.count({ where }),
-    Promise.all([
-      prisma.supportTicket.count({ where: { status: "OPEN" } }),
-      prisma.supportTicket.count({ where: { status: "IN_PROGRESS" } }),
-      prisma.supportTicket.count({ where: { status: "RESOLVED" } }),
-      prisma.supportTicket.count({ where: { status: "CLOSED" } }),
-    ]),
-  ]);
+  let tickets: any[] = [];
+  let total = 0;
+  let openCount = 0;
+  let inProgressCount = 0;
+  let resolvedCount = 0;
+  let closedCount = 0;
 
-  const [openCount, inProgressCount, resolvedCount, closedCount] = counts;
+  try {
+    const [ticketsData, totalData, countsData] = await Promise.all([
+      prisma.supportTicket.findMany({
+        where,
+        orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
+        skip,
+        take: PAGE_SIZE,
+        include: {
+          school: { select: { name: true } },
+          _count: { select: { messages: true } },
+        },
+      }),
+      prisma.supportTicket.count({ where }),
+      Promise.all([
+        prisma.supportTicket.count({ where: { status: "OPEN" } }),
+        prisma.supportTicket.count({ where: { status: "IN_PROGRESS" } }),
+        prisma.supportTicket.count({ where: { status: "RESOLVED" } }),
+        prisma.supportTicket.count({ where: { status: "CLOSED" } }),
+      ]),
+    ]);
+    tickets = ticketsData;
+    total = totalData;
+    [openCount, inProgressCount, resolvedCount, closedCount] = countsData;
+  } catch (error) {
+    console.error("Database connection failed in SuperAdminSupportPage:", error);
+  }
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (

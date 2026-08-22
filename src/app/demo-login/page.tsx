@@ -338,20 +338,6 @@ export default function DemoLoginPage() {
             Back to home
           </Link>
         </p>
-
-        {/* LinkedIn Profile */}
-        <div className="mt-6 text-center">
-          <a 
-            href="https://www.linkedin.com/in/mahammad-bilal-hyder-493295356" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#0077B5] hover:bg-[#006097] text-white rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 shadow-lg"
-          >
-            <ExternalLink className="w-4 h-4" />
-            Connect on LinkedIn
-          </a>
-          <p className="text-xs text-gray-400 mt-2">Built by Mahammad Bilal Hyder</p>
-        </div>
       </div>
 
       {/* Success Animation */}

@@ -7,21 +7,13 @@ export function withForceWork(handler: (req: Request, context?: any) => Promise<
   return async (req: Request, context?: any) => {
     try {
       return await handler(req, context);
-    } catch (error) {
-      console.log('Database operation failed, using mock data');
-      
-      const url = new URL(req.url);
-      const pathname = url.pathname;
-      
-      // Return appropriate mock data based on the endpoint
-      const mockData = getMockDataForEndpoint(pathname);
-      
+    } catch (error: any) {
+      console.error('[API Error]', error);
       return new Response(JSON.stringify({
-        success: true,
-        data: mockData,
-        message: "Demo mode - using mock data",
-        forceWorkMode: true
+        success: false,
+        error: error?.message || "Internal Server Error",
       }), {
+        status: 500,
         headers: { 'Content-Type': 'application/json' }
       });
     }

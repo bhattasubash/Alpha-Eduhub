@@ -10,12 +10,15 @@ import { logAudit } from "./audit";
 
 type CurrentState = { success: boolean; error: boolean; message?: string; data?: unknown };
 
+import crypto from "crypto";
+
 function generateSecurePassword(): string {
   const length = 12;
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+  const randomBytes = crypto.randomBytes(length);
   let password = '';
   for (let i = 0; i < length; i++) {
-    password += charset.charAt(Math.floor(Math.random() * charset.length));
+    password += charset[randomBytes[i] % charset.length];
   }
   return password;
 }
@@ -47,6 +50,15 @@ export const updateSubject = async (
   currentState: CurrentState, data: SubjectSchema,
 ): Promise<CurrentState> => {
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.subject.findUnique({ where: { id: data.id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Subject not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
     await prisma.subject.update({
       where: { id: data.id },
       data: {
@@ -66,7 +78,17 @@ export const deleteSubject = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.subject.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Subject not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
     await prisma.subject.delete({ where: { id } });
     revalidatePath("/list/subjects");
     return { success: true, error: false };
@@ -97,6 +119,15 @@ export const updateClass = async (
   currentState: CurrentState, data: ClassSchema,
 ): Promise<CurrentState> => {
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.class.findUnique({ where: { id: data.id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Class not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
     await prisma.class.update({ where: { id: data.id }, data });
     revalidatePath("/list/classes");
     return { success: true, error: false };
@@ -110,7 +141,17 @@ export const deleteClass = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.class.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Class not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
     await prisma.class.delete({ where: { id } });
     revalidatePath("/list/classes");
     return { success: true, error: false };
@@ -171,6 +212,15 @@ export const updateTeacher = async (
 ): Promise<CurrentState> => {
   if (!data.id) return { success: false, error: true, message: "Missing teacher ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.teacher.findUnique({ where: { id: data.id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Teacher not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
     await prisma.$transaction(async (tx) => {
       if (data.password) {
         const passwordHash = await bcrypt.hash(data.password, 12);
@@ -207,7 +257,17 @@ export const deleteTeacher = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = formData.get("id") as string;
+  if (!id) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.teacher.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Teacher not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
     // First unlink dependent records to avoid FK violations
     await prisma.$transaction(async (tx) => {
       // Unlink lessons (set teacher's lessons to be deleted or kept — we delete them)
@@ -593,11 +653,20 @@ export const updateStudent = async (
 ): Promise<CurrentState> => {
   if (!data.id) return { success: false, error: true, message: "Missing student ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existingStudent = await prisma.student.findUnique({ where: { id: data.id }, select: { schoolId: true, parentId: true } });
+    if (!existingStudent) return { success: false, error: true, message: "Student not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existingStudent.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
+
     let targetParentId = data.parentId?.trim();
     if (targetParentId) {
       const parentExists = await prisma.parent.findUnique({ where: { id: targetParentId } });
       if (!parentExists) {
-        const existingStudent = await prisma.student.findUnique({ where: { id: data.id }, select: { parentId: true } });
         targetParentId = existingStudent?.parentId ?? undefined;
       }
     }
@@ -634,7 +703,17 @@ export const deleteStudent = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = formData.get("id") as string;
+  if (!id) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.student.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Student not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
     await prisma.$transaction(async (tx) => {
       // Delete child records that don't cascade automatically
       await tx.attendance.deleteMany({ where: { studentId: id } });
@@ -720,6 +799,15 @@ export const updateParent = async (
 ): Promise<CurrentState> => {
   if (!data.id) return { success: false, error: true, message: "Missing parent ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.parent.findUnique({ where: { id: data.id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Parent not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
     await prisma.$transaction(async (tx) => {
       if (data.password) {
         const passwordHash = await bcrypt.hash(data.password, 12);
@@ -747,7 +835,17 @@ export const deleteParent = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = formData.get("id") as string;
+  if (!id) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.parent.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Parent not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
     await prisma.$transaction(async (tx) => {
       await tx.parent.delete({ where: { id } });
       await tx.user.delete({ where: { id } });
@@ -789,6 +887,15 @@ export const updateLesson = async (
 ): Promise<CurrentState> => {
   if (!data.id) return { success: false, error: true, message: "Missing lesson ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.lesson.findUnique({ where: { id: data.id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Lesson not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
     await prisma.lesson.update({
       where: { id: data.id },
       data: {
@@ -810,7 +917,17 @@ export const deleteLesson = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.lesson.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Lesson not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
     await prisma.$transaction(async (tx) => {
       await tx.attendance.deleteMany({ where: { lessonId: id } });
       await tx.assignment.deleteMany({ where: { lessonId: id } });
@@ -903,11 +1020,21 @@ export const createExam = async (
 export const updateExam = async (
   currentState: CurrentState, data: ExamSchema,
 ): Promise<CurrentState> => {
+  if (!data.id) return { success: false, error: true, message: "Missing exam ID." };
   try {
     const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.exam.findUnique({ where: { id: data.id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Exam not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
+
     let targetLessonId = data.lessonId;
     const subjectText = data.subjectName?.trim() || data.title;
-    const schoolId = session?.schoolId;
+    const schoolId = session.schoolId || existing.schoolId;
 
     if (!targetLessonId && data.classId && schoolId) {
       const [existingSubject, existingTeacher] = await Promise.all([
@@ -974,7 +1101,17 @@ export const deleteExam = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.exam.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Exam not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
     await prisma.$transaction(async (tx) => {
       await tx.result.deleteMany({ where: { examId: id } });
       await tx.exam.delete({ where: { id } });
@@ -1077,8 +1214,19 @@ export const updateAssignment = async (
 ): Promise<CurrentState> => {
   try {
     const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
     const isFd = dataOrFormData instanceof FormData;
     const id = parseInt(isFd ? (dataOrFormData.get("id") as string) : dataOrFormData.id);
+    if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
+
+    const existing = await prisma.assignment.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Assignment not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
+
     const title = isFd ? (dataOrFormData.get("title") as string) : dataOrFormData.title;
     const startDateStr = isFd ? (dataOrFormData.get("startDate") as string) : dataOrFormData.startDate;
     const dueDateStr = isFd ? (dataOrFormData.get("dueDate") as string) : dataOrFormData.dueDate;
@@ -1091,7 +1239,7 @@ export const updateAssignment = async (
     let targetLessonId = rawLessonId ? parseInt(rawLessonId.toString()) : undefined;
     const classId = rawClassId ? parseInt(rawClassId.toString()) : undefined;
     const subjectText = subjectName?.trim() || title;
-    const schoolId = session?.schoolId;
+    const schoolId = session.schoolId || existing.schoolId;
 
     if (!targetLessonId && classId && schoolId) {
       const [existingSubject, existingTeacher] = await Promise.all([
@@ -1157,7 +1305,17 @@ export const deleteAssignment = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.assignment.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Assignment not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
     await prisma.$transaction(async (tx) => {
       await tx.result.deleteMany({ where: { assignmentId: id } });
       await tx.assignment.delete({ where: { id } });
@@ -1202,7 +1360,18 @@ export const updateResult = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.result.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Result not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
+
     await prisma.result.update({
       where: { id },
       data: { score: parseInt(formData.get("score") as string) },
@@ -1221,7 +1390,9 @@ export const bulkUploadSectionResults = async (
 ): Promise<CurrentState> => {
   try {
     const session = await getSession();
-    if (!session?.schoolId) return { success: false, error: true, message: "Unauthorized" };
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
 
     const examIdStr = formData.get("examId") as string;
     const assignmentIdStr = formData.get("assignmentId") as string;
@@ -1248,7 +1419,7 @@ export const bulkUploadSectionResults = async (
         where: {
           studentId,
           ...(examId ? { examId } : { assignmentId }),
-          schoolId,
+          ...(schoolId ? { schoolId } : {}),
         },
         select: { id: true },
       });
@@ -1263,7 +1434,7 @@ export const bulkUploadSectionResults = async (
           data: {
             score,
             studentId,
-            schoolId,
+            schoolId: schoolId || "",
             ...(examId ? { examId } : { assignmentId }),
           },
         });
@@ -1273,7 +1444,7 @@ export const bulkUploadSectionResults = async (
     revalidatePath("/list/results");
     return { success: true, error: false, message: "Marks uploaded successfully!" };
   } catch (err) {
-    console.error("[bulkUploadResults]", err);
+    console.error("[bulkUploadSectionResults]", err);
     return { success: false, error: true, message: "Failed to upload marks." };
   }
 };
@@ -1282,7 +1453,18 @@ export const deleteResult = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.result.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Result not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
+
     await prisma.result.delete({ where: { id } });
     revalidatePath("/list/results");
     return { success: true, error: false };
@@ -1321,7 +1503,18 @@ export const updateAttendance = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.attendance.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Attendance record not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
+
     await prisma.attendance.update({
       where: { id },
       data: { present: formData.get("present") === "true", date: new Date(formData.get("date") as string) },
@@ -1338,7 +1531,18 @@ export const deleteAttendance = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.attendance.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Attendance record not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
+
     await prisma.attendance.delete({ where: { id } });
     revalidatePath("/list/attendance");
     revalidatePath("/teacher/classroom");
@@ -1563,6 +1767,7 @@ export const deleteDiscipline = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
     const session = await getSession();
     if (!session?.userId) return { success: false, error: true, message: "Unauthorized" };
@@ -1570,6 +1775,9 @@ export const deleteDiscipline = async (
     const record = await prisma.discipline.findFirst({
       where: {
         id,
+        ...(session.role !== "SUPER_ADMIN" && session.role !== "provider" && session.schoolId
+          ? { schoolId: session.schoolId }
+          : {}),
         ...(isTeacherRole(session.role) ? { teacherId: session.userId } : {}),
       },
     });
@@ -1614,7 +1822,18 @@ export const updateEvent = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.event.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Event not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
+
     await prisma.event.update({
       where: { id },
       data: {
@@ -1637,7 +1856,18 @@ export const deleteEvent = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.event.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Event not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
+
     await prisma.event.delete({ where: { id } });
     revalidatePath("/list/events");
     return { success: true, error: false };
@@ -1676,7 +1906,18 @@ export const updateAnnouncement = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.announcement.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Announcement not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
+
     await prisma.announcement.update({
       where: { id },
       data: {
@@ -1698,7 +1939,18 @@ export const deleteAnnouncement = async (
   currentState: CurrentState, formData: FormData,
 ): Promise<CurrentState> => {
   const id = parseInt(formData.get("id") as string);
+  if (isNaN(id)) return { success: false, error: true, message: "Invalid ID." };
   try {
+    const session = await getSession();
+    if (!session?.schoolId && session?.role !== "SUPER_ADMIN" && session?.role !== "provider") {
+      return { success: false, error: true, message: "Unauthorized" };
+    }
+    const existing = await prisma.announcement.findUnique({ where: { id }, select: { schoolId: true } });
+    if (!existing) return { success: false, error: true, message: "Announcement not found." };
+    if (session.role !== "SUPER_ADMIN" && session.role !== "provider" && existing.schoolId !== session.schoolId) {
+      return { success: false, error: true, message: "Forbidden: Cross-tenant access denied" };
+    }
+
     await prisma.announcement.delete({ where: { id } });
     revalidatePath("/list/announcements");
     return { success: true, error: false };

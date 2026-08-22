@@ -8,6 +8,9 @@ import { getRole, getCurrentSchoolId } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 const subjectSortOptions: SortOption[] = [
   { label: "Subject Name (A to Z)", field: "name", order: "asc" },
   { label: "Subject Name (Z to A)", field: "name", order: "desc" },
@@ -29,16 +32,23 @@ const SubjectListPage = async ({
     ...(search ? { name: { contains: search, mode: "insensitive" } } : {}),
   };
 
-  const [data, count] = await Promise.all([
-    prisma.subject.findMany({
-      where,
-      include: { teachers: { select: { name: true, surname: true } } },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
-      orderBy: { name: order },
-    }),
-    prisma.subject.count({ where }),
-  ]);
+  let data: any[] = [];
+  let count = 0;
+
+  try {
+    [data, count] = await Promise.all([
+      prisma.subject.findMany({
+        where,
+        include: { teachers: { select: { name: true, surname: true } } },
+        take: ITEM_PER_PAGE,
+        skip: ITEM_PER_PAGE * (p - 1),
+        orderBy: { name: order },
+      }),
+      prisma.subject.count({ where }),
+    ]);
+  } catch (error) {
+    console.error("Database connection failed in SubjectListPage:", error);
+  }
 
   const columns = [
     { header: "Subject Name", accessor: "name" },
@@ -50,7 +60,7 @@ const SubjectListPage = async ({
     <tr key={item.id} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight">
       <td className="flex items-center gap-4 p-4 font-medium">{item.name}</td>
       <td className="hidden md:table-cell">
-        {item.teachers.map((t) => `${t.name} ${t.surname}`).join(", ") || "—"}
+        {item.teachers.map((t: any) => `${t.name} ${t.surname}`).join(", ") || "—"}
       </td>
       <td>
         <div className="flex items-center gap-2">

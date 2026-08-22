@@ -16,10 +16,15 @@ export default async function SuperAdminLayout({
     redirect("/sign-in");
   }
 
-  const schools = await prisma.school.findMany({
-    select: { id: true, name: true },
-    orderBy: { name: "asc" },
-  });
+  let schools: { id: string; name: string }[] = [];
+  try {
+    schools = await prisma.school.findMany({
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    });
+  } catch (error) {
+    console.error("Database connection failed in SuperAdminLayout:", error);
+  }
 
   const activeSchoolId = await getActiveSchoolId();
 

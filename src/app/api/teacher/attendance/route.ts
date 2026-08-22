@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireSession } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 import { triggerAttendanceAbsentNotification, triggerAttendanceThresholdNotification } from "@/lib/notificationTriggers";
-import { mockAttendance, mockStudents } from "@/lib/mockData";
 
 function attendanceDate(value: unknown): Date | null {
   if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
@@ -32,15 +31,12 @@ export async function GET(request: NextRequest) {
       select: { studentId: true, present: true },
     });
     return NextResponse.json({ records });
-  } catch (error) {
-    console.log("Database error, using mock data for attendance");
-    // Return mock data when database fails
-    const mockAttendanceData = mockStudents.map((student, index) => ({
-      studentId: student.id,
-      present: mockAttendance[index % mockAttendance.length]?.status === 'present' || Math.random() > 0.2
-    }));
-    
-    return NextResponse.json({ records: mockAttendanceData });
+  } catch (error: any) {
+    console.error("[GET /api/teacher/attendance]", error);
+    return NextResponse.json(
+      { error: error?.message || "Failed to fetch attendance" },
+      { status: 500 }
+    );
   }
 }
 
@@ -93,9 +89,11 @@ export async function POST(request: NextRequest) {
     }));
 
     return NextResponse.json({ success: true, message: "Attendance saved successfully" });
-  } catch (error) {
-    console.log("Database error, simulating attendance save");
-    // Simulate successful save
-    return NextResponse.json({ success: true, message: "Attendance saved successfully (demo mode)", forceWorkMode: true });
+  } catch (error: any) {
+    console.error("[POST /api/teacher/attendance]", error);
+    return NextResponse.json(
+      { error: error?.message || "Failed to save attendance" },
+      { status: 500 }
+    );
   }
 }

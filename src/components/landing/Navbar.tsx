@@ -2,16 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, GraduationCap, ExternalLink } from "lucide-react";
+import { Menu, X, GraduationCap, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 const navLinks = [
-  { label: "Why Me?", href: "#why-me" },
-  { label: "Featured Project", href: "#featured-project" },
-  { label: "All Projects", href: "#all-projects" },
-  { label: "What I Built", href: "#what-i-built" },
-  { label: "Technical Architecture", href: "#technical-architecture" },
-  { label: "Contact", href: "#contact" },
+  { label: "Features", href: "#features" },
+  { label: "Dashboards", href: "#preview" },
+  { label: "Platform", href: "#webapp" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "Architecture", href: "#technical-architecture" },
+  { label: "FAQ", href: "#faq" },
 ];
 
 export default function Navbar() {
@@ -32,19 +32,19 @@ export default function Navbar() {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? "backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-lg shadow-black/20"
+            ? "backdrop-blur-xl bg-slate-950/80 border-b border-white/10 shadow-lg shadow-black/20"
             : "bg-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:shadow-indigo-500/40 transition-shadow">
-                <span className="text-white font-bold text-lg">MB</span>
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:shadow-indigo-500/40 transition-shadow">
+                <GraduationCap className="w-5 h-5 text-white" />
               </div>
               <span className="font-bold text-white text-lg tracking-tight">
-                Mahammad <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Bilal</span>
+                Alpha <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Edu Hub</span>
               </span>
             </Link>
 
@@ -54,7 +54,7 @@ export default function Navbar() {
                 <a
                   key={link.label}
                   href={link.href}
-                  className="px-4 py-2 text-sm text-white/70 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                  className="px-3.5 py-2 text-sm text-white/70 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
                 >
                   {link.label}
                 </a>
@@ -63,22 +63,19 @@ export default function Navbar() {
 
             {/* Desktop CTA */}
             <div className="hidden md:flex items-center gap-3">
-              <a
-                href="/resume.pdf"
-                download
-                className="px-4 py-2 text-sm text-white/80 hover:text-white transition-colors"
+              <Link
+                href="/demo-login"
+                className="px-4 py-2 text-sm font-medium text-white/80 hover:text-white border border-white/10 rounded-xl hover:bg-white/5 transition-all"
               >
-                Download Resume
-              </a>
-              <a
-                href="https://www.linkedin.com/in/mahammad-bilal-hyder-493295356"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg border border-white/10 bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
-                aria-label="LinkedIn"
+                Demo Access
+              </Link>
+              <Link
+                href="/sign-in"
+                className="inline-flex items-center gap-2 px-5 py-2 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 shadow-lg shadow-blue-500/25 transition-all hover:scale-105"
               >
-                <ExternalLink className="w-4 h-4" />
-              </a>
+                Sign In
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
 
             {/* Mobile menu button */}
@@ -115,22 +112,20 @@ export default function Navbar() {
                 </a>
               ))}
               <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-white/10">
-                <a
-                  href="/resume.pdf"
-                  download
-                  className="px-4 py-3 text-white/70 hover:text-white text-center rounded-lg hover:bg-white/5 transition-all"
+                <Link
+                  href="/demo-login"
+                  onClick={() => setMobileOpen(false)}
+                  className="px-4 py-3 text-white/80 hover:text-white text-center rounded-lg border border-white/10 hover:bg-white/5 transition-all font-medium text-sm"
                 >
-                  Download Resume
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/mahammad-bilal-hyder-493295356"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 px-4 py-3 text-white/70 hover:text-white text-center rounded-lg hover:bg-white/5 transition-all"
+                  Demo Access
+                </Link>
+                <Link
+                  href="/sign-in"
+                  onClick={() => setMobileOpen(false)}
+                  className="px-4 py-3 text-white font-semibold text-center rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 transition-all text-sm"
                 >
-                  <ExternalLink className="w-4 h-4" />
-                  Connect on LinkedIn
-                </a>
+                  Sign In
+                </Link>
               </div>
             </div>
           </motion.div>

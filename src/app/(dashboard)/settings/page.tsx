@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 const SettingsPage = () => {
   return (
     <div className="p-4 flex-1 flex flex-col gap-4">

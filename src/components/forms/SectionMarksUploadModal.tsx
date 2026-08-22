@@ -24,7 +24,7 @@ export default function SectionMarksUploadModal({
   const [studentScores, setStudentScores] = useState<Record<string, string>>({});
 
   const router = useRouter();
-  const [state, formAction] = useFormState(bulkUploadSectionResults, { success: false, error: false });
+  const [state, formAction] = useFormState(bulkUploadSectionResults, { success: false, error: false, message: "" });
 
   // Fetch Section Students & Exams whenever selectedClassId changes
   useEffect(() => {

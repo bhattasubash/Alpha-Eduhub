@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import { CalendarDays } from "lucide-react";
 import TimetableViewer, { type LessonForView } from "@/components/TimetableViewer";
 
+export const dynamic = 'force-dynamic';
+
 export default async function StudentTimetablePage() {
   const session = await getSession();
   if (!session) return <div className="p-8 text-center text-gray-500">Please sign in.</div>;

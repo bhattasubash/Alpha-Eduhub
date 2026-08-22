@@ -8,6 +8,8 @@ import { getRole, getCurrentSchoolId, getCurrentUserId } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
+export const dynamic = 'force-dynamic';
+
 const lessonSortOptions: SortOption[] = [
   { label: "Lesson Name (A to Z)", field: "name", order: "asc" },
   { label: "Lesson Name (Z to A)", field: "name", order: "desc" },
@@ -40,20 +42,27 @@ const LessonListPage = async ({
     } : {}),
   };
 
-  const [data, count] = await Promise.all([
-    prisma.lesson.findMany({
-      where,
-      include: {
-        subject: { select: { name: true } },
-        class:   { select: { name: true } },
-        teacher: { select: { name: true, surname: true } },
-      },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
-      orderBy,
-    }),
-    prisma.lesson.count({ where }),
-  ]);
+  let data: any[] = [];
+  let count = 0;
+
+  try {
+    [data, count] = await Promise.all([
+      prisma.lesson.findMany({
+        where,
+        include: {
+          subject: { select: { name: true } },
+          class:   { select: { name: true } },
+          teacher: { select: { name: true, surname: true } },
+        },
+        take: ITEM_PER_PAGE,
+        skip: ITEM_PER_PAGE * (p - 1),
+        orderBy,
+      }),
+      prisma.lesson.count({ where }),
+    ]);
+  } catch (error) {
+    console.error("Database connection failed in LessonListPage:", error);
+  }
 
   const columns = [
     { header: "Subject",  accessor: "name" },

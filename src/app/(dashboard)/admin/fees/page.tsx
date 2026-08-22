@@ -5,6 +5,8 @@ import { GraduationCap, Users, DollarSign, ArrowRight } from "lucide-react";
 import FeeManager from "@/components/admin/FeeManager";
 import { getFeeStructures, getFeeRecords } from "@/lib/adminFeeActions";
 
+export const dynamic = 'force-dynamic';
+
 const AdminFeesPage = async ({
   searchParams,
 }: {

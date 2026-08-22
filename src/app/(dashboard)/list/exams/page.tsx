@@ -9,6 +9,8 @@ import { getRole, getCurrentSchoolId, getCurrentUserId } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
+export const dynamic = 'force-dynamic';
+
 const examSortOptions: SortOption[] = [
   { label: "Date (Newest first)", field: "startTime", order: "desc" },
   { label: "Date (Oldest first)", field: "startTime", order: "asc" },
@@ -40,29 +42,37 @@ const ExamListPage = async ({
     ...(search ? { title: { contains: search, mode: "insensitive" } } : {}),
   };
 
-  const [data, count, classList] = await Promise.all([
-    prisma.exam.findMany({
-      where,
-      include: {
-        lesson: {
-          include: {
-            subject: { select: { name: true } },
-            class:   { select: { name: true } },
-            teacher: { select: { name: true, surname: true } },
+  let data: any[] = [];
+  let count = 0;
+  let classList: any[] = [];
+
+  try {
+    [data, count, classList] = await Promise.all([
+      prisma.exam.findMany({
+        where,
+        include: {
+          lesson: {
+            include: {
+              subject: { select: { name: true } },
+              class:   { select: { name: true } },
+              teacher: { select: { name: true, surname: true } },
+            },
           },
         },
-      },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
-      orderBy,
-    }),
-    prisma.exam.count({ where }),
-    prisma.class.findMany({
-      where: schoolId ? { schoolId } : {},
-      select: { id: true, name: true },
-      orderBy: { name: "asc" },
-    }),
-  ]);
+        take: ITEM_PER_PAGE,
+        skip: ITEM_PER_PAGE * (p - 1),
+        orderBy,
+      }),
+      prisma.exam.count({ where }),
+      prisma.class.findMany({
+        where: schoolId ? { schoolId } : {},
+        select: { id: true, name: true },
+        orderBy: { name: "asc" },
+      }),
+    ]);
+  } catch (error) {
+    console.error("Database connection failed in ExamListPage:", error);
+  }
 
   const columns = [
     { header: "Subject & Title", accessor: "name" },

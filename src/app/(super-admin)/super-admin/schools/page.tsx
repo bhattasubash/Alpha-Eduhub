@@ -76,30 +76,44 @@ export default async function SchoolsPage({ searchParams }: PageProps) {
     ...(plan   ? { subscriptionPlan: plan as "FREE" | "STARTER" | "PROFESSIONAL" | "ENTERPRISE" } : {}),
   };
 
-  const [schools, total] = await Promise.all([
-    prisma.school.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: PAGE_SIZE,
-      select: {
-        id: true, name: true, email: true, phone: true, address: true,
-        status: true, createdAt: true, subscriptionPlan: true,
-        subscriptionStatus: true, storageUsedMb: true, storageLimitMb: true,
-        _count: { select: { students: true, teachers: true, users: true } },
-      },
-    }),
-    prisma.school.count({ where }),
-  ]);
+  let schools: any[] = [];
+  let total = 0;
+  let activeCount = 0;
+  let suspendedCount = 0;
+  let trialCount = 0;
+
+  try {
+    const [schoolsData, totalData] = await Promise.all([
+      prisma.school.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: PAGE_SIZE,
+        select: {
+          id: true, name: true, email: true, phone: true, address: true,
+          status: true, createdAt: true, subscriptionPlan: true,
+          subscriptionStatus: true, storageUsedMb: true, storageLimitMb: true,
+          _count: { select: { students: true, teachers: true, users: true } },
+        },
+      }),
+      prisma.school.count({ where }),
+    ]);
+    schools = schoolsData;
+    total = totalData;
+
+    const [aCount, sCount, tCount] = await Promise.all([
+      prisma.school.count({ where: { status: "ACTIVE" } }),
+      prisma.school.count({ where: { status: "SUSPENDED" } }),
+      prisma.school.count({ where: { status: "TRIAL" } }),
+    ]);
+    activeCount = aCount;
+    suspendedCount = sCount;
+    trialCount = tCount;
+  } catch (error) {
+    console.error("Database connection failed in SuperAdminSchoolsPage:", error);
+  }
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
-
-  // Summary counts
-  const [activeCount, suspendedCount, trialCount] = await Promise.all([
-    prisma.school.count({ where: { status: "ACTIVE" } }),
-    prisma.school.count({ where: { status: "SUSPENDED" } }),
-    prisma.school.count({ where: { status: "TRIAL" } }),
-  ]);
 
   return (
     <div className="space-y-6">

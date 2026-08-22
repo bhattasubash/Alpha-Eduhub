@@ -11,6 +11,8 @@ import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import Image from "next/image";
 
+export const dynamic = 'force-dynamic';
+
 const attendanceSortOptions: SortOption[] = [
   { label: "Date (Newest first)", field: "date", order: "desc" },
   { label: "Date (Oldest first)", field: "date", order: "asc" },
@@ -41,24 +43,32 @@ const AttendanceListPage = async ({
     } : {}),
   };
 
-  const [data, count, classList] = await Promise.all([
-    prisma.attendance.findMany({
-      where,
-      include: {
-        student: { select: { id: true, name: true, surname: true, img: true } },
-        lesson:  { include: { class: { select: { name: true } }, teacher: { select: { name: true, surname: true } } } },
-      },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
-      orderBy: { date: order },
-    }),
-    prisma.attendance.count({ where }),
-    prisma.class.findMany({
-      where: schoolId ? { schoolId } : {},
-      select: { id: true, name: true },
-      orderBy: { name: "asc" },
-    }),
-  ]);
+  let data: any[] = [];
+  let count = 0;
+  let classList: any[] = [];
+
+  try {
+    [data, count, classList] = await Promise.all([
+      prisma.attendance.findMany({
+        where,
+        include: {
+          student: { select: { id: true, name: true, surname: true, img: true } },
+          lesson:  { include: { class: { select: { name: true } }, teacher: { select: { name: true, surname: true } } } },
+        },
+        take: ITEM_PER_PAGE,
+        skip: ITEM_PER_PAGE * (p - 1),
+        orderBy: { date: order },
+      }),
+      prisma.attendance.count({ where }),
+      prisma.class.findMany({
+        where: schoolId ? { schoolId } : {},
+        select: { id: true, name: true },
+        orderBy: { name: "asc" },
+      }),
+    ]);
+  } catch (error) {
+    console.error("Database connection failed in AttendanceListPage:", error);
+  }
 
   const columns = [
     { header: "Student Name", accessor: "studentName" },

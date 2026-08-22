@@ -10,6 +10,8 @@ import { getRole, getCurrentSchoolId, getCurrentUserId } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
+export const dynamic = 'force-dynamic';
+
 const resultSortOptions: SortOption[] = [
   { label: "Score (Highest first)",  field: "score", order: "desc" },
   { label: "Score (Lowest first)",   field: "score", order: "asc" },
@@ -51,25 +53,33 @@ const ResultListPage = async ({
     } : {}),
   };
 
-  const [data, count, classList] = await Promise.all([
-    prisma.result.findMany({
-      where,
-      include: {
-        student:    { select: { name: true, surname: true } },
-        exam:       { include: { lesson: { include: { subject: { select: { name: true } }, class: { select: { name: true } }, teacher: { select: { name: true, surname: true } } } } } },
-        assignment: { include: { lesson: { include: { subject: { select: { name: true } }, class: { select: { name: true } }, teacher: { select: { name: true, surname: true } } } } } },
-      },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
-      orderBy,
-    }),
-    prisma.result.count({ where }),
-    prisma.class.findMany({
-      where: schoolId ? { schoolId } : {},
-      select: { id: true, name: true },
-      orderBy: { name: "asc" },
-    }),
-  ]);
+  let data: any[] = [];
+  let count = 0;
+  let classList: any[] = [];
+
+  try {
+    [data, count, classList] = await Promise.all([
+      prisma.result.findMany({
+        where,
+        include: {
+          student:    { select: { name: true, surname: true } },
+          exam:       { include: { lesson: { include: { subject: { select: { name: true } }, class: { select: { name: true } }, teacher: { select: { name: true, surname: true } } } } } },
+          assignment: { include: { lesson: { include: { subject: { select: { name: true } }, class: { select: { name: true } }, teacher: { select: { name: true, surname: true } } } } } },
+        },
+        take: ITEM_PER_PAGE,
+        skip: ITEM_PER_PAGE * (p - 1),
+        orderBy,
+      }),
+      prisma.result.count({ where }),
+      prisma.class.findMany({
+        where: schoolId ? { schoolId } : {},
+        select: { id: true, name: true },
+        orderBy: { name: "asc" },
+      }),
+    ]);
+  } catch (error) {
+    console.error("Database connection failed in ResultListPage:", error);
+  }
 
   const columns = [
     { header: "Title",   accessor: "title" },

@@ -27,7 +27,7 @@ postgresql://postgres:password@aws-0-us-east-1.pooler.supabase.com:6543/postgres
 ## Alternative: Direct Connection URL
 If pooling doesn't work, use the direct connection:
 ```
-postgresql://postgres:Zv3umfQzQSkXsyWg@db.reyigjmzdwxquvpsgxpq.supabase.co:5432/postgres
+postgresql://postgres:[YOUR-PASSWORD]@db.reyigjmzdwxquvpsgxpq.supabase.co:5432/postgres
 ```
 
 ## Important Notes:

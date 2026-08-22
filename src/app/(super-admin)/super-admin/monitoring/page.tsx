@@ -25,24 +25,28 @@ export default async function MonitoringPage() {
   }
 
   // Table sizes
-  const [
-    schoolCount, userCount, studentCount, teacherCount,
-    auditCount, tokenCount,
-  ] = await Promise.all([
-    prisma.school.count(),
-    prisma.user.count(),
-    prisma.student.count(),
-    prisma.teacher.count(),
-    prisma.auditLog.count(),
-    prisma.refreshToken.count(),
-  ]);
+  let schoolCount = 0, userCount = 0, studentCount = 0, teacherCount = 0, auditCount = 0, tokenCount = 0;
+  let recentAudit: any[] = [];
 
-  // Recent errors from audit (actions that might indicate issues)
-  const recentAudit = await prisma.auditLog.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 5,
-    select: { action: true, entity: true, createdAt: true, actorRole: true },
-  });
+  try {
+    const counts = await Promise.all([
+      prisma.school.count(),
+      prisma.user.count(),
+      prisma.student.count(),
+      prisma.teacher.count(),
+      prisma.auditLog.count(),
+      prisma.refreshToken.count(),
+    ]);
+    [schoolCount, userCount, studentCount, teacherCount, auditCount, tokenCount] = counts;
+
+    recentAudit = await prisma.auditLog.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: { action: true, entity: true, createdAt: true, actorRole: true },
+    });
+  } catch (error) {
+    console.error("Database connection failed in SuperAdminMonitoringPage:", error);
+  }
 
   return (
     <div className="space-y-8">
