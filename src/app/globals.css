@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,211 +6,147 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;      /* #F8FAFC - crisp alabaster canvas */
-    --foreground: 222.2 47.4% 11.2%; /* #0F172A - deep slate */
-    --card: 0 0% 100%;               /* #FFFFFF - clean card surface */
-    --card-foreground: 222.2 47.4% 11.2%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 47.4% 11.2%;
-    --primary: 221.2 83.2% 53.3%;    /* #2563EB - academic sapphire blue */
-    --primary-foreground: 210 40% 98%;
-    --secondary: 214.3 31.8% 91.4%;  /* #E2E8F0 */
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;          /* #F1F5F9 */
-    --muted-foreground: 215.4 16.3% 46.9%; /* #64748B */
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;     /* #E2E8F0 */
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.625rem;              /* 10px - balanced architectural radius */
-  }
-
-  .dark {
-    --background: 224 71% 4%;        /* #090D16 - deep obsidian */
-    --foreground: 210 40% 98%;       /* #F8FAFC */
-    --card: 222.2 47.4% 8%;          /* #0F172A - slate-900 */
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 47.4% 8%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;     /* #1E293B */
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --background: #F6F3EC;
+    --foreground: #1B2420;
+    --card: #FCFAF6;
+    --card-foreground: #1B2420;
+    --popover: #FCFAF6;
+    --popover-foreground: #1B2420;
+    --primary: #2F4A3C;
+    --primary-foreground: #F6F3EC;
+    --secondary: #ECE7DC;
+    --secondary-foreground: #1B2420;
+    --muted: #ECE7DC;
+    --muted-foreground: #4A564F;
+    --accent: #E9EFEA;
+    --accent-foreground: #1B2420;
+    --destructive: #8B3A3A;
+    --destructive-foreground: #F6F3EC;
+    --border: #D9D2C2;
+    --input: #D9D2C2;
+    --ring: #2F4A3C;
+    --radius: 4px;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: #D9D2C2;
   }
+
   body {
-    @apply bg-background text-foreground antialiased selection:bg-blue-600/20 selection:text-blue-900;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #F6F3EC;
+    color: #1B2420;
+    font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
   }
+
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
-    letter-spacing: -0.025em;
+    font-family: 'Newsreader', Georgia, Cambria, 'Times New Roman', serif;
+    font-feature-settings: "liga" 1, "dlig" 1;
+    letter-spacing: -0.02em;
+    color: #1B2420;
   }
 }
 
-/* Institutional Clean Utilities */
+/* Ledger & Paper High-Trust Custom Utilities */
 @layer utilities {
-  .surface-card {
-    background-color: #ffffff;
-    border: 1px solid rgba(226, 232, 240, 0.85);
-    box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
+  .font-serif-editorial {
+    font-family: 'Newsreader', Georgia, Cambria, serif;
   }
 
-  .surface-card-hover {
-    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.15s ease;
-  }
-  .surface-card-hover:hover {
-    transform: translateY(-1px);
-    border-color: rgba(203, 213, 225, 1);
-    box-shadow: 0 4px 12px 0 rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
-  }
-
-  .dark .surface-card {
-    background-color: #0F172A;
-    border: 1px solid #1E293B;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
-  }
-
-  .tabular-numbers {
+  .font-mono-ledger {
+    font-family: 'IBM Plex Mono', monospace;
     font-variant-numeric: tabular-nums;
+  }
+
+  .paper-card {
+    background-color: #FCFAF6;
+    border: 1px solid #D9D2C2;
+  }
+
+  .paper-inset {
+    background-color: #ECE7DC;
+    border: 1px solid #D9D2C2;
+  }
+
+  .ruled-grid {
+    background-image: linear-gradient(to bottom, #D9D2C2 1px, transparent 1px);
+    background-size: 100% 28px;
   }
 
   .scrollbar-clean {
     scrollbar-width: thin;
-    scrollbar-color: #CBD5E1 transparent;
+    scrollbar-color: #D9D2C2 transparent;
   }
   .scrollbar-clean::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  .scrollbar-clean::-webkit-scrollbar-track {
-    background: transparent;
+    width: 5px;
+    height: 5px;
   }
   .scrollbar-clean::-webkit-scrollbar-thumb {
-    background: #CBD5E1;
-    border-radius: 9999px;
-  }
-  .scrollbar-clean::-webkit-scrollbar-thumb:hover {
-    background: #94A3B8;
+    background: #D9D2C2;
+    border-radius: 2px;
   }
 }
 
-/* React Calendar - Institutional Clean */
+/* Calendar & BigCalendar - Ledger Theme */
 .react-calendar {
   width: 100% !important;
-  border: none !important;
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
-  background: transparent !important;
+  border: 1px solid #D9D2C2 !important;
+  font-family: 'Public Sans', sans-serif !important;
+  background: #FCFAF6 !important;
+  border-radius: 4px !important;
 }
 
 .react-calendar__navigation {
   display: flex !important;
-  height: 44px !important;
-  margin-bottom: 0.75rem !important;
+  height: 40px !important;
+  margin-bottom: 0.5rem !important;
 }
 
 .react-calendar__navigation button {
-  min-width: 36px !important;
+  min-width: 32px !important;
   background: none !important;
   font-size: 14px !important;
   font-weight: 600 !important;
-  color: #1E293B !important;
-  border-radius: 6px !important;
-  transition: background-color 0.15s ease !important;
-}
-
-.react-calendar__navigation button:hover {
-  background-color: #F1F5F9 !important;
-}
-
-.react-calendar__month-view__weekdays {
-  text-align: center !important;
-  text-transform: uppercase !important;
-  font-weight: 600 !important;
-  font-size: 11px !important;
-  color: #64748B !important;
-  padding-bottom: 6px !important;
-}
-
-.react-calendar__tile {
-  max-width: 100% !important;
-  padding: 10px 6px !important;
-  background: none !important;
-  text-align: center !important;
-  line-height: 16px !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  color: #334155 !important;
-  border-radius: 8px !important;
-  transition: all 0.15s ease !important;
-}
-
-.react-calendar__tile:hover {
-  background-color: #F1F5F9 !important;
-  color: #0F172A !important;
+  color: #1B2420 !important;
 }
 
 .react-calendar__tile--now {
-  background-color: #F8FAFC !important;
+  background-color: #ECE7DC !important;
   font-weight: 700 !important;
-  color: #2563EB !important;
+  color: #2F4A3C !important;
 }
 
 .react-calendar__tile--active {
-  background-color: #2563EB !important;
-  color: #FFFFFF !important;
+  background-color: #2F4A3C !important;
+  color: #F6F3EC !important;
   font-weight: 600 !important;
 }
 
-.react-calendar__tile--active:hover {
-  background-color: #1D4ED8 !important;
-  color: #FFFFFF !important;
-}
-
-/* React Big Calendar - Institutional Clean */
 .rbc-calendar {
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
-  border: 1px solid #E2E8F0 !important;
-  border-radius: 10px !important;
-  background: #FFFFFF !important;
+  font-family: 'Public Sans', sans-serif !important;
+  border: 1px solid #D9D2C2 !important;
+  border-radius: 4px !important;
+  background: #FCFAF6 !important;
 }
 
 .rbc-header {
-  padding: 10px 4px !important;
+  padding: 8px 4px !important;
   font-weight: 600 !important;
-  font-size: 13px !important;
-  color: #475569 !important;
-  border-bottom: 1px solid #E2E8F0 !important;
-  background: #F8FAFC !important;
-}
-
-.rbc-today {
-  background-color: #F8FAFC !important;
+  font-size: 12px !important;
+  color: #4A564F !important;
+  border-bottom: 1px solid #D9D2C2 !important;
+  background: #ECE7DC !important;
 }
 
 .rbc-event {
-  background-color: #2563EB !important;
-  border-radius: 6px !important;
-  padding: 4px 8px !important;
-  font-size: 12px !important;
+  background-color: #2F4A3C !important;
+  border-radius: 2px !important;
+  padding: 3px 6px !important;
+  font-size: 11px !important;
   font-weight: 500 !important;
   border: none !important;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
 }

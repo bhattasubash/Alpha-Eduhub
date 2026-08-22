@@ -2,29 +2,21 @@
 
 import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
-import TrustedBy from "@/components/landing/TrustedBy";
 import Features from "@/components/landing/Features";
-import DashboardPreview from "@/components/landing/DashboardPreview";
-import WebApp from "@/components/landing/WebApp";
-import Testimonials from "@/components/landing/Testimonials";
+import RolesSection from "@/components/landing/RolesSection";
 import Pricing from "@/components/landing/Pricing";
-import TechnicalArchitecture from "@/components/landing/TechnicalArchitecture";
 import FAQ from "@/components/landing/FAQ";
 import ContactCTA from "@/components/landing/ContactCTA";
 import Footer from "@/components/landing/Footer";
 
 export default function LandingPage() {
   return (
-    <main className="bg-slate-950 min-h-screen text-slate-100 overflow-x-hidden">
+    <main className="bg-paper text-ink min-h-screen selection:bg-ledger/20 selection:text-ink">
       <Navbar />
       <Hero />
-      <TrustedBy />
       <Features />
-      <DashboardPreview />
-      <WebApp />
-      <Testimonials />
+      <RolesSection />
       <Pricing />
-      <TechnicalArchitecture />
       <FAQ />
       <ContactCTA />
       <Footer />

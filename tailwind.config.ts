@@ -17,104 +17,77 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        sans: ["'Plus Jakarta Sans'", "-apple-system", "BlinkMacSystemFont", "'Segoe UI'", "Roboto", "sans-serif"],
-        display: ["'Outfit'", "'Plus Jakarta Sans'", "sans-serif"],
-        mono: ["'JetBrains Mono'", "monospace"],
-      },
-      spacing: {
-        '18': '4.5rem',
-        '88': '22rem',
-        '112': '28rem',
-        '128': '32rem',
+        serif: ["'Newsreader'", "Georgia", "Cambria", "'Times New Roman'", "serif"],
+        sans: ["'Public Sans'", "'Source Sans 3'", "-apple-system", "BlinkMacSystemFont", "'Segoe UI'", "Roboto", "sans-serif"],
+        mono: ["'IBM Plex Mono'", "'JetBrains Mono'", "monospace"],
       },
       colors: {
-        // Refined institutional semantic tokens (replaces cartoon pastels)
-        lamaSky: "#E0F2FE", // sky-100 (subtle calm academic blue)
-        lamaSkyLight: "#F0F9FF", // sky-50
-        lamaPurple: "#EDE9FE", // violet-100 (refined soft violet)
-        lamaPurpleLight: "#F5F3FF", // violet-50
-        lamaYellow: "#FEF3C7", // amber-100 (warm subtle amber)
-        lamaYellowLight: "#FFFBEB", // amber-50
+        // Locked Paper & Ink Editorial Tokens
+        paper: "#F6F3EC",        // Warm paper background (not pure white)
+        "paper-light": "#FCFAF6", // Slightly elevated paper surface
+        "paper-dark": "#ECE7DC",  // Slightly recessed paper tone
+        ink: "#1B2420",          // Primary text (near-black with deep forest green undertone)
+        "ink-muted": "#4A564F",  // Secondary text
+        "ink-subtle": "#75827A", // Tertiary text
+        ledger: "#2F4A3C",       // Deep forest green (primary accent, buttons, links)
+        "ledger-hover": "#233A2E",
+        "ledger-light": "#E9EFEA", // Very light ledger tint
+        brass: "#B08D57",        // Secondary accent (small labels, dividers)
+        "brass-light": "#F5EFE6",
+        line: "#D9D2C2",         // Hairline borders, dividers
+        "line-dark": "#C5BCAB",
+        alert: "#8B3A3A",        // Oxblood (errors/warnings only)
 
-        // Institutional Core Palette
-        brand: {
-          50: "#EFF6FF",
-          100: "#DBEAFE",
-          200: "#BFDBFE",
-          300: "#93C5FD",
-          400: "#60A5FA",
-          500: "#3B82F6",
-          600: "#2563EB",
-          700: "#1D4ED8",
-          800: "#1E40AF",
-          900: "#1E3A8A",
-          950: "#0F172A",
-        },
-        slate: {
-          850: "#151F32",
-          950: "#090D16",
-        },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        // Compatibility aliases for legacy dashboard components
+        lamaSky: "#E9EFEA",
+        lamaSkyLight: "#F6F3EC",
+        lamaPurple: "#ECE7DC",
+        lamaPurpleLight: "#FCFAF6",
+        lamaYellow: "#F5EFE6",
+        lamaYellowLight: "#FCFAF6",
+
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "var(--primary)",
+          foreground: "var(--primary-foreground)",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "var(--secondary)",
+          foreground: "var(--secondary-foreground)",
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "var(--destructive)",
+          foreground: "var(--destructive-foreground)",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "var(--accent)",
+          foreground: "var(--accent-foreground)",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "var(--popover)",
+          foreground: "var(--popover-foreground)",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "var(--card)",
+          foreground: "var(--card-foreground)",
         },
       },
       borderRadius: {
-        '3xl': '1.25rem',
-        '2xl': '1rem',
-        xl: '0.75rem',
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        lg: "6px",
+        md: "4px",
+        sm: "2px",
       },
       boxShadow: {
-        'subtle': '0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 3px 1px rgba(0, 0, 0, 0.02)',
-        'card': '0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04)',
-        'card-hover': '0 4px 12px 0 rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04)',
-        'popover': '0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05)',
-      },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        'ledger': '0 1px 3px 0 rgba(27, 36, 32, 0.06), 0 1px 2px -1px rgba(27, 36, 32, 0.04)',
+        'ledger-lift': '0 4px 12px 0 rgba(27, 36, 32, 0.08), 0 2px 4px -2px rgba(27, 36, 32, 0.04)',
       },
     },
   },

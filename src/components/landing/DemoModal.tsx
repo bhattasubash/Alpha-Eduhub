@@ -11,7 +11,6 @@ import {
   MessageSquare,
   Loader2,
   CheckCircle2,
-  GraduationCap,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -20,8 +19,8 @@ interface DemoModalProps {
   onClose: () => void;
 }
 
-const roles = ["Principal / Admin", "Teacher", "IT Director", "Parent", "Other"];
-const studentRanges = ["< 100", "100 – 500", "500 – 1,500", "1,500 – 5,000", "5,000+"];
+const roles = ["Principal / Headmaster", "School Administrator", "Trustee / Board Member", "Teacher", "Other"];
+const studentRanges = ["Under 300 Pupils", "300 – 1,000 Pupils", "1,000 – 3,000 Pupils", "3,000+ (Multi-Campus)"];
 
 const initialForm = {
   name: "",
@@ -58,24 +57,24 @@ function Field({
   error?: string;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-white/60 text-xs font-medium">
-        {label} {required && <span className="text-red-400">*</span>}
+    <div className="flex flex-col gap-1.5 font-sans">
+      <label htmlFor={id} className="text-ink-muted text-xs font-semibold">
+        {label} {required && <span className="text-alert">*</span>}
       </label>
       <div className="relative">
-        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25 pointer-events-none" />
+        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-subtle pointer-events-none" />
         <input
           id={id}
           type={type}
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={`w-full bg-white/5 border ${
-            error ? "border-red-500/50" : "border-white/10"
-          } rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-blue-500/50 focus:bg-white/8 transition-all`}
+          className={`w-full bg-paper border ${
+            error ? "border-alert" : "border-line"
+          } rounded pl-9 pr-3.5 py-2 text-xs text-ink placeholder:text-ink-subtle outline-none focus:border-ledger transition-colors`}
         />
       </div>
-      {error && <p className="text-red-400 text-xs">{error}</p>}
+      {error && <p className="text-alert text-[11px] font-medium">{error}</p>}
     </div>
   );
 }
@@ -98,7 +97,7 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
     if (!form.phone.trim()) e.phone = "Phone number is required";
     if (!form.schoolName.trim()) e.schoolName = "School name is required";
     if (!form.role) e.role = "Please select your role";
-    if (!form.students) e.students = "Please select student count";
+    if (!form.students) e.students = "Please select student range";
     setErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -125,13 +124,12 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
 
   function handleClose() {
     onClose();
-    // reset after exit animation
     setTimeout(() => {
       setForm(initialForm);
       setErrors({});
       setStatus("idle");
       setServerError("");
-    }, 300);
+    }, 200);
   }
 
   return (
@@ -145,81 +143,72 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={handleClose}
-            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-ink/50 backdrop-blur-xs"
           />
 
           {/* Modal */}
           <motion.div
             key="modal"
-            initial={{ opacity: 0, scale: 0.93, y: 30 }}
+            initial={{ opacity: 0, scale: 0.96, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.93, y: 30 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            exit={{ opacity: 0, scale: 0.96, y: 15 }}
+            transition={{ duration: 0.2 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
           >
             <div
-              className="relative w-full max-w-lg pointer-events-auto rounded-3xl border border-white/10 bg-gradient-to-br from-[#0d1030] to-[#080b1e] shadow-2xl shadow-black/60 overflow-hidden"
+              className="relative w-full max-w-lg pointer-events-auto rounded bg-paper-light border border-line shadow-ledger overflow-hidden text-ink"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Top gradient line */}
-              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
-
               {/* Header */}
-              <div className="flex items-start justify-between p-6 pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
-                    <GraduationCap className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-white font-bold text-lg">Book a Live Demo</h2>
-                    <p className="text-white/40 text-xs">We&apos;ll reach out within 24 hours</p>
-                  </div>
+              <div className="flex items-start justify-between p-6 pb-4 border-b border-line bg-paper">
+                <div>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-brass font-semibold">
+                    Live System Walkthrough
+                  </span>
+                  <h2 className="font-serif text-2xl font-bold text-ink mt-0.5">
+                    Book a School Walkthrough
+                  </h2>
+                  <p className="text-xs text-ink-muted mt-1">
+                    A practical 20-minute consultation with realistic school data.
+                  </p>
                 </div>
                 <button
                   onClick={handleClose}
                   aria-label="Close"
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
+                  className="p-1.5 rounded hover:bg-paper-dark text-ink-muted hover:text-ink transition-colors cursor-pointer"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Scrollable body */}
-              <div className="overflow-y-auto max-h-[calc(100vh-160px)] px-6 pb-6">
+              {/* Body */}
+              <div className="overflow-y-auto max-h-[calc(100vh-180px)] p-6">
                 {status === "success" ? (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex flex-col items-center justify-center py-12 text-center gap-4"
-                  >
-                    <div className="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-                      <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+                  <div className="flex flex-col items-center justify-center py-8 text-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-ledger-light border border-ledger/30 flex items-center justify-center text-ledger">
+                      <CheckCircle2 className="w-6 h-6" />
                     </div>
-                    <div>
-                      <h3 className="text-white font-bold text-xl mb-2">
-                        Request Received! 🎉
-                      </h3>
-                      <p className="text-white/50 text-sm leading-relaxed max-w-xs">
-                        Thanks <span className="text-white font-medium">{form.name}</span>! Our team will contact you at{" "}
-                        <span className="text-blue-400">{form.email}</span> within 24 hours to schedule your personalized demo.
-                      </p>
-                    </div>
+                    <h3 className="font-serif text-xl font-bold text-ink">
+                      Walkthrough Scheduled
+                    </h3>
+                    <p className="text-xs text-ink-muted leading-relaxed max-w-sm">
+                      Thank you, <span className="font-semibold text-ink">{form.name}</span>. An education systems engineer will contact you at <span className="font-mono text-ink font-medium">{form.email}</span> within 24 business hours.
+                    </p>
                     <button
                       onClick={handleClose}
-                      className="mt-4 px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+                      className="mt-4 px-6 py-2 rounded bg-ledger text-paper text-xs font-semibold hover:bg-ledger-hover transition-colors"
                     >
                       Close
                     </button>
-                  </motion.div>
+                  </div>
                 ) : (
-                  <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
-                    {/* Row 1 */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <form onSubmit={handleSubmit} noValidate className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                       <Field
                         icon={User}
                         label="Full Name"
                         id="name"
-                        placeholder="Jane Smith"
+                        placeholder="Dr. Eleanor Vance"
                         value={form.name}
                         onChange={set("name")}
                         required
@@ -227,9 +216,9 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
                       />
                       <Field
                         icon={Building2}
-                        label="School / Institution"
+                        label="Institution Name"
                         id="schoolName"
-                        placeholder="Greenwood Academy"
+                        placeholder="St. Jude Academy"
                         value={form.schoolName}
                         onChange={set("schoolName")}
                         required
@@ -237,14 +226,13 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
                       />
                     </div>
 
-                    {/* Row 2 */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                       <Field
                         icon={Mail}
-                        label="Work Email"
+                        label="Institutional Email"
                         id="email"
                         type="email"
-                        placeholder="jane@school.edu"
+                        placeholder="principal@stjude.edu"
                         value={form.email}
                         onChange={set("email")}
                         required
@@ -252,10 +240,10 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
                       />
                       <Field
                         icon={Phone}
-                        label="Phone Number"
+                        label="Direct Phone"
                         id="phone"
                         type="tel"
-                        placeholder="+91 98765 43210"
+                        placeholder="+1 (555) 019-2834"
                         value={form.phone}
                         onChange={set("phone")}
                         required
@@ -263,96 +251,80 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
                       />
                     </div>
 
-                    {/* Role select */}
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-white/60 text-xs font-medium">
-                        Your Role <span className="text-red-400">*</span>
-                      </label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25 pointer-events-none" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                      <div className="flex flex-col gap-1.5 font-sans">
+                        <label className="text-ink-muted text-xs font-semibold">
+                          Your Role <span className="text-alert">*</span>
+                        </label>
                         <select
                           value={form.role}
                           onChange={(e) => set("role")(e.target.value)}
-                          className={`w-full appearance-none bg-white/5 border ${
-                            errors.role ? "border-red-500/50" : "border-white/10"
-                          } rounded-xl pl-9 pr-4 py-2.5 text-sm text-white outline-none focus:border-blue-500/50 transition-all cursor-pointer`}
+                          className={`w-full bg-paper border ${
+                            errors.role ? "border-alert" : "border-line"
+                          } rounded px-3 py-2 text-xs text-ink outline-none focus:border-ledger transition-colors cursor-pointer`}
                         >
-                          <option value="" className="bg-[#0d1030]">Select your role…</option>
+                          <option value="">Select role…</option>
                           {roles.map((r) => (
-                            <option key={r} value={r} className="bg-[#0d1030]">{r}</option>
+                            <option key={r} value={r}>{r}</option>
                           ))}
                         </select>
+                        {errors.role && <p className="text-alert text-[11px] font-medium">{errors.role}</p>}
                       </div>
-                      {errors.role && <p className="text-red-400 text-xs">{errors.role}</p>}
-                    </div>
 
-                    {/* Student count select */}
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-white/60 text-xs font-medium">
-                        Number of Students <span className="text-red-400">*</span>
-                      </label>
-                      <div className="relative">
-                        <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25 pointer-events-none" />
+                      <div className="flex flex-col gap-1.5 font-sans">
+                        <label className="text-ink-muted text-xs font-semibold">
+                          Enrolled Pupils <span className="text-alert">*</span>
+                        </label>
                         <select
                           value={form.students}
                           onChange={(e) => set("students")(e.target.value)}
-                          className={`w-full appearance-none bg-white/5 border ${
-                            errors.students ? "border-red-500/50" : "border-white/10"
-                          } rounded-xl pl-9 pr-4 py-2.5 text-sm text-white outline-none focus:border-blue-500/50 transition-all cursor-pointer`}
+                          className={`w-full bg-paper border ${
+                            errors.students ? "border-alert" : "border-line"
+                          } rounded px-3 py-2 text-xs text-ink outline-none focus:border-ledger transition-colors cursor-pointer`}
                         >
-                          <option value="" className="bg-[#0d1030]">Select range…</option>
+                          <option value="">Select student count…</option>
                           {studentRanges.map((r) => (
-                            <option key={r} value={r} className="bg-[#0d1030]">{r}</option>
+                            <option key={r} value={r}>{r}</option>
                           ))}
                         </select>
+                        {errors.students && <p className="text-alert text-[11px] font-medium">{errors.students}</p>}
                       </div>
-                      {errors.students && <p className="text-red-400 text-xs">{errors.students}</p>}
                     </div>
 
-                    {/* Message */}
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="message" className="text-white/60 text-xs font-medium">
-                        Anything specific you&apos;d like to see? <span className="text-white/30">(optional)</span>
+                    <div className="flex flex-col gap-1.5 font-sans">
+                      <label htmlFor="message" className="text-ink-muted text-xs font-semibold">
+                        Specific Questions or Systems to Replace <span className="text-ink-subtle font-normal">(Optional)</span>
                       </label>
-                      <div className="relative">
-                        <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-white/25 pointer-events-none" />
-                        <textarea
-                          id="message"
-                          placeholder="e.g. attendance module, parent app, bulk import…"
-                          value={form.message}
-                          onChange={(e) => set("message")(e.target.value)}
-                          rows={3}
-                          className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-blue-500/50 focus:bg-white/8 transition-all resize-none"
-                        />
-                      </div>
+                      <textarea
+                        id="message"
+                        placeholder="e.g. Replacing legacy Excel ledgers and manual Word report cards…"
+                        value={form.message}
+                        onChange={(e) => set("message")(e.target.value)}
+                        rows={2}
+                        className="w-full bg-paper border border-line rounded p-2.5 text-xs text-ink placeholder:text-ink-subtle outline-none focus:border-ledger transition-colors resize-none"
+                      />
                     </div>
 
-                    {/* Server error */}
                     {status === "error" && (
-                      <p className="text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-2.5">
-                        ⚠ {serverError}
+                      <p className="text-alert text-xs bg-alert/10 border border-alert/20 rounded p-2 font-mono">
+                        {serverError}
                       </p>
                     )}
 
-                    {/* Submit */}
                     <button
                       type="submit"
                       disabled={status === "loading"}
-                      className="w-full py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold text-sm shadow-lg shadow-blue-500/25 transition-all duration-300 hover:scale-[1.02] disabled:opacity-60 disabled:scale-100 flex items-center justify-center gap-2 mt-1"
+                      className="w-full py-2.5 rounded bg-ledger hover:bg-ledger-hover text-paper font-semibold text-xs transition-colors cursor-pointer flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
                     >
                       {status === "loading" ? (
                         <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          Submitting…
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          Processing…
                         </>
                       ) : (
-                        "Book My Free Demo →"
+                        "Confirm Walkthrough Request"
                       )}
                     </button>
-
-                    <p className="text-white/25 text-xs text-center">
-                      No spam. No credit card. Cancel anytime.
-                    </p>
                   </form>
                 )}
               </div>

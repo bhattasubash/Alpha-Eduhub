@@ -1,145 +1,268 @@
 "use client";
 
-import { motion } from "framer-motion";
-import {
-  BookOpen,
-  CalendarCheck,
-  CreditCard,
-  ShieldAlert,
-  GraduationCap,
-  Users,
-  FileSpreadsheet,
-  Clock,
-  ArrowRight,
-} from "lucide-react";
-import Link from "next/link";
-
-const CAPABILITY_PILLARS = [
-  {
-    category: "ACADEMIC & CURRICULUM",
-    title: "Instructional Workflows & Gradebook Automation",
-    description:
-      "Eliminate spreadsheet chaos with a unified syllabus manager, lesson registry, examination scheduler, and single-click transcript generation.",
-    items: [
-      {
-        icon: BookOpen,
-        title: "Curriculum & Lesson Planning",
-        desc: "Structure syllabi across terms, link lesson materials, and map standards-aligned objectives.",
-      },
-      {
-        icon: FileSpreadsheet,
-        title: "Examinations & Grade Publishing",
-        desc: "Enter exam results once; generate branded PDF report cards and student performance trends instantly.",
-      },
-      {
-        icon: Clock,
-        title: "Conflict-Free Timetable Engine",
-        desc: "Automated schedule allocation that validates instructor availability, room capacities, and class periods.",
-      },
-    ],
-  },
-  {
-    category: "GOVERNANCE & FINANCIAL OPERATIONS",
-    title: "Enterprise Multi-Tenancy & Institutional Accounting",
-    description:
-      "Built for single institutions or nationwide school networks with total data sovereignty, role boundaries, and clear ledger auditing.",
-    items: [
-      {
-        icon: CreditCard,
-        title: "Fee Structures & Collection Ledgers",
-        desc: "Set class-specific fee templates, generate invoice receipts, and track pending dues with audit logs.",
-      },
-      {
-        icon: CalendarCheck,
-        title: "Verified Attendance & Leave Desk",
-        desc: "Daily morning roll-call with automated absent triggers to guardians and staff leave review workflows.",
-      },
-      {
-        icon: ShieldAlert,
-        title: "Multi-Tenant Row Security & RBAC",
-        desc: "Isolated school schemas with granular access rules for Super Admins, Principals, Faculty, and Parents.",
-      },
-    ],
-  },
-];
-
 export default function Features() {
   return (
-    <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-950 text-slate-100 border-t border-slate-900">
-      <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="max-w-3xl mb-16">
-          <p className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-3">
-            Core Architecture
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
-            Engineered for every administrative layer of modern education.
-          </h2>
-          <p className="text-sm sm:text-base text-slate-400 mt-3 leading-relaxed">
-            Replace disjointed third-party plugins with a cohesive, institution-grade operational backbone.
-          </p>
-        </div>
+    <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-paper border-b border-line">
+      <div className="max-w-6xl mx-auto space-y-24">
 
-        {/* Capability Pillars */}
-        <div className="space-y-12">
-          {CAPABILITY_PILLARS.map((pillar) => (
-            <div
-              key={pillar.category}
-              className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 lg:p-10"
-            >
-              <div className="max-w-2xl mb-8">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                  {pillar.category}
-                </span>
-                <h3 className="text-xl sm:text-2xl font-bold text-white mt-1.5 tracking-tight">
-                  {pillar.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-400 mt-2 leading-relaxed">
-                  {pillar.description}
-                </p>
+        {/* ─── SECTION 1: ATTENDANCE (Text Left, UI Right) ──────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div className="lg:col-span-5 space-y-4">
+            <span className="font-mono text-xs uppercase tracking-widest text-brass font-medium">
+              01 / Daily Roll Call
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-ink leading-tight">
+              Roll call takes 90 seconds, not the whole first period.
+            </h2>
+            <p className="text-base sm:text-[17px] text-ink-muted leading-relaxed">
+              A teacher marks attendance from their phone or the classroom tablet. Absent students trigger an automatic message to parents — no separate step, no end-of-day catch-up. By the time the bell rings for period two, the day&apos;s register is closed and every parent who needed to know, knows.
+            </p>
+          </div>
+
+          <div className="lg:col-span-7">
+            <div className="paper-card rounded-md shadow-ledger overflow-hidden">
+              <div className="bg-paper-dark px-4 py-2.5 border-b border-line flex items-center justify-between font-mono text-xs">
+                <span className="font-semibold text-ink">Grade 8-A · Period 1 Homeroom</span>
+                <span className="text-ink-subtle">Tuesday, 08:30 AM</span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-slate-800/80">
-                {pillar.items.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div
-                      key={item.title}
-                      className="p-5 rounded-xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="w-9 h-9 rounded-lg bg-blue-950 text-blue-400 border border-blue-800/50 flex items-center justify-center mb-4">
-                          <Icon className="w-4 h-4" strokeWidth={1.75} />
-                        </div>
-                        <h4 className="text-sm font-bold text-white tracking-tight mb-2">
-                          {item.title}
-                        </h4>
-                        <p className="text-xs text-slate-400 leading-relaxed">
-                          {item.desc}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="p-4 sm:p-5 bg-paper-light space-y-3">
+                <table className="w-full text-left font-mono text-xs">
+                  <thead>
+                    <tr className="border-b border-line text-ink-subtle">
+                      <th className="pb-2 font-medium">Roll #</th>
+                      <th className="pb-2 font-medium">Student Name</th>
+                      <th className="pb-2 font-medium">Status</th>
+                      <th className="pb-2 font-medium text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-line/60">
+                    <tr>
+                      <td className="py-2.5 text-ink-subtle">#01</td>
+                      <td className="py-2.5 font-medium text-ink">Aarav Sharma</td>
+                      <td className="py-2.5 text-ledger font-semibold">Present</td>
+                      <td className="py-2.5 text-right font-sans text-xs text-ink-subtle">08:29 AM</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 text-ink-subtle">#02</td>
+                      <td className="py-2.5 font-medium text-ink">Claire Vance</td>
+                      <td className="py-2.5 text-alert font-semibold">Absent (Unexcused)</td>
+                      <td className="py-2.5 text-right font-sans text-xs text-alert">SMS Dispatched 08:31</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 text-ink-subtle">#03</td>
+                      <td className="py-2.5 font-medium text-ink">Devin Reynolds</td>
+                      <td className="py-2.5 text-brass font-semibold">Late (Medical)</td>
+                      <td className="py-2.5 text-right font-sans text-xs text-ink-subtle">Note Verified</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 text-ink-subtle">#04</td>
+                      <td className="py-2.5 font-medium text-ink">Elena Rostova</td>
+                      <td className="py-2.5 text-ledger font-semibold">Present</td>
+                      <td className="py-2.5 text-right font-sans text-xs text-ink-subtle">08:28 AM</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div className="pt-2 border-t border-line flex items-center justify-between text-xs font-mono text-ink-muted">
+                  <span>Register Summary: 27 Present · 1 Absent</span>
+                  <span className="text-ledger font-medium">Register Sealed</span>
+                </div>
               </div>
             </div>
-          ))}
+          </div>
         </div>
 
-        {/* Bottom Banner */}
-        <div className="mt-12 p-6 rounded-xl border border-slate-800 bg-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <h4 className="text-sm font-bold text-white">Need custom SIS migration assistance?</h4>
-            <p className="text-xs text-slate-400 mt-0.5">Our engineering team assists with legacy SQL & Excel data transfers.</p>
+        {/* ─── SECTION 2: FEES (UI Left, Text Right) ────────────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div className="lg:col-span-7 order-2 lg:order-1">
+            <div className="paper-card rounded-md shadow-ledger overflow-hidden">
+              <div className="bg-paper-dark px-4 py-2.5 border-b border-line flex items-center justify-between font-mono text-xs">
+                <span className="font-semibold text-ink">Fee Ledger Statement · Grade 10</span>
+                <span className="text-ink-subtle">Term II Ledger</span>
+              </div>
+
+              <div className="p-4 sm:p-5 bg-paper-light space-y-3">
+                <table className="w-full text-left font-mono text-xs">
+                  <thead>
+                    <tr className="border-b border-line text-ink-subtle">
+                      <th className="pb-2 font-medium">Receipt</th>
+                      <th className="pb-2 font-medium">Student / Family</th>
+                      <th className="pb-2 font-medium">Billed</th>
+                      <th className="pb-2 font-medium">Paid</th>
+                      <th className="pb-2 font-medium text-right">Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-line/60">
+                    <tr>
+                      <td className="py-2.5 text-ink-subtle">#REC-8491</td>
+                      <td className="py-2.5 font-medium text-ink">Marcus Bell (G10-B)</td>
+                      <td className="py-2.5 text-ink">$650.00</td>
+                      <td className="py-2.5 text-ledger font-semibold">$650.00</td>
+                      <td className="py-2.5 text-right text-ledger font-semibold">$0.00 (Paid)</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 text-ink-subtle">#REC-8492</td>
+                      <td className="py-2.5 font-medium text-ink">Siddharth Nair (G10-A)</td>
+                      <td className="py-2.5 text-ink">$650.00</td>
+                      <td className="py-2.5 text-ink">$350.00</td>
+                      <td className="py-2.5 text-right text-alert font-semibold">$300.00 Dues</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 text-ink-subtle">#REC-8493</td>
+                      <td className="py-2.5 font-medium text-ink">Hannah Abbott (G10-B)</td>
+                      <td className="py-2.5 text-ink">$650.00</td>
+                      <td className="py-2.5 text-ledger font-semibold">$650.00</td>
+                      <td className="py-2.5 text-right text-ledger font-semibold">$0.00 (Paid)</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div className="pt-2 border-t border-line flex items-center justify-between text-xs font-mono text-ink-muted">
+                  <span>Class Total: $24,700 Billed</span>
+                  <span className="text-ink font-semibold">$22,400 Collected (90.6%)</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <Link
-            href="/demo-login"
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shrink-0 transition-colors"
-          >
-            <span>Explore Live Sandbox</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+
+          <div className="lg:col-span-5 space-y-4 order-1 lg:order-2">
+            <span className="font-mono text-xs uppercase tracking-widest text-brass font-medium">
+              02 / Financial Ledger
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-ink leading-tight">
+              Every fee, every family, one ledger — no spreadsheet reconciliation.
+            </h2>
+            <p className="text-base sm:text-[17px] text-ink-muted leading-relaxed">
+              Set a fee structure once per class or term. Parents pay through the portal or you record cash/cheque manually — either way it lands in the same ledger, with a receipt generated automatically. At the end of the month, you&apos;re not chasing down which of three spreadsheets has the correct pending-dues list.
+            </p>
+          </div>
         </div>
+
+        {/* ─── SECTION 3: REPORT CARDS (Text Left, UI Right) ────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div className="lg:col-span-5 space-y-4">
+            <span className="font-mono text-xs uppercase tracking-widest text-brass font-medium">
+              03 / Academic Transcripts
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-ink leading-tight">
+              Enter a grade once. The report card writes itself.
+            </h2>
+            <p className="text-base sm:text-[17px] text-ink-muted leading-relaxed">
+              Teachers enter exam scores directly against the syllabus they already built in the system. When it&apos;s time for report cards, the system pulls every subject, formats it against your school&apos;s template, and generates a PDF per student — not a week of manual formatting in Word.
+            </p>
+          </div>
+
+          <div className="lg:col-span-7">
+            <div className="paper-card rounded-md shadow-ledger p-5 sm:p-6 bg-paper-light space-y-4 border border-line">
+              <div className="border-b border-line pb-3 flex items-start justify-between">
+                <div>
+                  <p className="font-mono text-[10px] text-brass uppercase tracking-wider font-semibold">Official Terminal Transcript</p>
+                  <h3 className="font-serif text-base font-bold text-ink">St. Jude Academy · Term II Evaluation</h3>
+                  <p className="font-mono text-xs text-ink-muted">Pupil: Olivia Wright · Grade 9-A · Roll #14</p>
+                </div>
+                <div className="border border-line px-2.5 py-1 rounded font-mono text-xs text-ink bg-paper font-semibold">
+                  GPA: 3.88
+                </div>
+              </div>
+
+              <table className="w-full text-left font-mono text-xs">
+                <thead>
+                  <tr className="border-b border-line text-ink-subtle">
+                    <th className="pb-1.5 font-medium">Subject</th>
+                    <th className="pb-1.5 font-medium">Max Marks</th>
+                    <th className="pb-1.5 font-medium">Scored</th>
+                    <th className="pb-1.5 font-medium text-right">Grade</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-line/50">
+                  <tr>
+                    <td className="py-2 font-medium text-ink">Mathematics (Algebra II)</td>
+                    <td className="py-2 text-ink-subtle">100</td>
+                    <td className="py-2 text-ink font-semibold">94</td>
+                    <td className="py-2 text-right text-ledger font-bold">A</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 font-medium text-ink">Physics &amp; Chemistry</td>
+                    <td className="py-2 text-ink-subtle">100</td>
+                    <td className="py-2 text-ink font-semibold">89</td>
+                    <td className="py-2 text-right text-ledger font-bold">A-</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 font-medium text-ink">English Literature</td>
+                    <td className="py-2 text-ink-subtle">100</td>
+                    <td className="py-2 text-ink font-semibold">92</td>
+                    <td className="py-2 text-right text-ledger font-bold">A</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 font-medium text-ink">World History</td>
+                    <td className="py-2 text-ink-subtle">100</td>
+                    <td className="py-2 text-ink font-semibold">86</td>
+                    <td className="py-2 text-right text-ledger font-bold">B+</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div className="pt-3 border-t border-line flex items-center justify-between text-xs font-mono text-ink-muted">
+                <span>Term Attendance: 98.5% (65/66 Days)</span>
+                <span className="border border-line px-2 py-0.5 rounded text-ink font-sans text-xs bg-paper">
+                  PDF Generated Automatically
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ─── SECTION 4: PARENT COMMUNICATION (UI Left, Text Right) ────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div className="lg:col-span-7 order-2 lg:order-1">
+            <div className="paper-card rounded-md shadow-ledger p-5 bg-paper-light space-y-3 border border-line">
+              <div className="flex items-center justify-between border-b border-line pb-2.5 font-mono text-xs">
+                <span className="font-semibold text-ink">Guardian Feed (Parent: Mrs. Wright)</span>
+                <span className="text-ink-subtle">Live Updates</span>
+              </div>
+
+              <div className="space-y-2.5 font-mono text-xs">
+                <div className="p-3 bg-paper border border-line rounded flex items-start justify-between">
+                  <div>
+                    <span className="text-[10px] uppercase text-ledger font-bold">Morning Attendance</span>
+                    <p className="font-sans text-xs font-medium text-ink mt-0.5">Olivia Wright marked Present for Period 1.</p>
+                  </div>
+                  <span className="text-ink-subtle text-[11px]">08:30 AM</span>
+                </div>
+
+                <div className="p-3 bg-paper border border-line rounded flex items-start justify-between">
+                  <div>
+                    <span className="text-[10px] uppercase text-brass font-bold">Grade Published</span>
+                    <p className="font-sans text-xs font-medium text-ink mt-0.5">Mathematics Term II score published: 94/100 (Grade A).</p>
+                  </div>
+                  <span className="text-ink-subtle text-[11px]">11:45 AM</span>
+                </div>
+
+                <div className="p-3 bg-paper border border-line rounded flex items-start justify-between">
+                  <div>
+                    <span className="text-[10px] uppercase text-ink font-bold">Receipt Logged</span>
+                    <p className="font-sans text-xs font-medium text-ink mt-0.5">Term II Tuition fee receipt #REC-8491 confirmed ($650.00).</p>
+                  </div>
+                  <span className="text-ink-subtle text-[11px]">Yesterday</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5 space-y-4 order-1 lg:order-2">
+            <span className="font-mono text-xs uppercase tracking-widest text-brass font-medium">
+              04 / Parent Portal
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-ink leading-tight">
+              Parents see what&apos;s happening the same day, not at the next PTM.
+            </h2>
+            <p className="text-base sm:text-[17px] text-ink-muted leading-relaxed">
+              Attendance, grades, and fee status are visible to parents as they happen — not batched into a term-end update. Fewer &ldquo;is my child actually attending?&rdquo; phone calls to the front office.
+            </p>
+          </div>
+        </div>
+
       </div>
     </section>
   );
