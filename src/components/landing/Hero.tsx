@@ -8,18 +8,18 @@ export default function Hero() {
   const [demoOpen, setDemoOpen] = useState(false);
 
   return (
-    <section className="relative pt-12 pb-20 px-4 sm:px-6 lg:px-8 border-b border-line bg-paper">
+    <section className="relative pt-14 pb-20 px-4 sm:px-6 lg:px-8 border-b border-line bg-paper">
       <DemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
 
       {/* Subtle ruled lines background motif */}
-      <div className="absolute inset-0 ruled-grid opacity-30 pointer-events-none" />
+      <div className="absolute inset-0 ruled-grid opacity-25 pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
           
           {/* Left Column: Headline, Subhead, CTAs */}
           <div className="lg:col-span-6 space-y-6">
-            <div className="inline-block font-mono text-[11px] uppercase tracking-widest text-brass border-b border-brass/50 pb-0.5">
+            <div className="inline-block font-mono text-xs uppercase tracking-widest text-brass-dark font-semibold border-b border-brass-dark/40 pb-0.5">
               School Management System
             </div>
 
@@ -47,7 +47,7 @@ export default function Hero() {
               </Link>
             </div>
 
-            <p className="font-mono text-xs text-ink-subtle pt-2">
+            <p className="font-mono text-xs text-ink-subtle pt-1">
               Setup takes under a week · No software installation required
             </p>
           </div>
@@ -65,7 +65,7 @@ export default function Hero() {
                 <div className="font-mono text-[11px] text-ink-muted bg-paper px-3 py-0.5 rounded border border-line">
                   app.alphaeduhub.in/admin
                 </div>
-                <div className="font-mono text-[10px] text-brass font-medium">
+                <div className="font-mono text-[10px] text-brass-dark font-semibold">
                   LIVE REGISTER
                 </div>
               </div>
@@ -78,7 +78,8 @@ export default function Hero() {
                     <h3 className="font-serif text-base font-bold text-ink">St. Jude Academy</h3>
                     <p className="font-mono text-xs text-ink-subtle">Term II · Academic Year 2024–25</p>
                   </div>
-                  <span className="font-mono text-xs font-semibold px-2 py-0.5 bg-ledger-light text-ledger rounded border border-ledger/20">
+                  <span className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold px-2.5 py-1 bg-ledger-light text-ledger rounded border border-ledger/20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-ledger" />
                     All Systems Operational
                   </span>
                 </div>
@@ -100,7 +101,7 @@ export default function Hero() {
                   <div className="p-3.5 bg-paper border border-line rounded">
                     <p className="font-mono text-[11px] text-ink-subtle uppercase">Fee Ledger (Term II)</p>
                     <p className="font-mono text-2xl font-bold text-ink mt-0.5">$184,200</p>
-                    <p className="text-[11px] text-ink-muted mt-1">91% Collected to date</p>
+                    <p className="font-mono text-[11px] text-ledger font-semibold mt-1">91% Collected to date</p>
                   </div>
 
                   <div className="p-3.5 bg-paper border border-line rounded">
@@ -120,15 +121,15 @@ export default function Hero() {
                   <div className="space-y-2 font-mono text-xs">
                     <div className="flex items-center justify-between text-ink-muted border-b border-line/60 pb-1.5">
                       <span>Grade 8-A Roll Call closed</span>
-                      <span className="text-ledger font-medium">28 Present · 1 Absent</span>
+                      <span className="text-ledger font-semibold">28 Present · 1 Absent</span>
                     </div>
                     <div className="flex items-center justify-between text-ink-muted border-b border-line/60 pb-1.5">
                       <span>Tuition Receipt #4821 issued</span>
-                      <span className="text-ink font-medium">$450.00 (Card)</span>
+                      <span className="text-ledger font-semibold">$450.00 (Card)</span>
                     </div>
                     <div className="flex items-center justify-between text-ink-muted">
                       <span>Physics Exam Marks published</span>
-                      <span className="text-brass font-medium">Grade 10 · 34 PDFs</span>
+                      <span className="text-ink font-semibold">Grade 10 · 34 PDFs</span>
                     </div>
                   </div>
                 </div>

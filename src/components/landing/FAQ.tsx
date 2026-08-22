@@ -29,7 +29,7 @@ export default function FAQ() {
     <section id="faq" className="py-20 px-4 sm:px-6 lg:px-8 bg-paper border-b border-line">
       <div className="max-w-4xl mx-auto">
         <div className="mb-12">
-          <span className="font-mono text-xs uppercase tracking-widest text-brass font-medium">
+          <span className="font-mono text-xs uppercase tracking-widest text-brass-dark font-semibold">
             Common Inquiries
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-ink leading-tight mt-2">

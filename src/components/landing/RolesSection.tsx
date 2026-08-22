@@ -23,7 +23,7 @@ export default function RolesSection() {
     <section id="roles" className="py-20 px-4 sm:px-6 lg:px-8 bg-paper border-b border-line">
       <div className="max-w-6xl mx-auto">
         <div className="max-w-2xl mb-12">
-          <span className="font-mono text-xs uppercase tracking-widest text-brass font-medium">
+          <span className="font-mono text-xs uppercase tracking-widest text-brass-dark font-semibold">
             Role-Based Access
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-ink leading-tight mt-2">
@@ -43,7 +43,7 @@ export default function RolesSection() {
               <div>
                 <div className="flex items-center justify-between font-mono text-xs text-ink-subtle pb-3 border-b border-line mb-4">
                   <span>0{i + 1}</span>
-                  <span className="text-brass font-medium">{item.scope}</span>
+                  <span className="text-brass-dark font-semibold">{item.scope}</span>
                 </div>
                 <h3 className="font-serif text-xl font-bold text-ink mb-2">
                   {item.role}

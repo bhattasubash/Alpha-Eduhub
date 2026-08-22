@@ -22,17 +22,20 @@ const config: Config = {
         mono: ["'IBM Plex Mono'", "'JetBrains Mono'", "monospace"],
       },
       colors: {
-        // Locked Paper & Ink Editorial Tokens
-        paper: "#F6F3EC",        // Warm paper background (not pure white)
-        "paper-light": "#FCFAF6", // Slightly elevated paper surface
-        "paper-dark": "#ECE7DC",  // Slightly recessed paper tone
+        // Refined Paper & Ink Editorial Tokens
+        paper: "#F6F3EC",        // Primary warm paper background
+        "paper-band": "#EFEAE0",  // Banding alternate background (breaks up 6700px scroll)
+        "paper-highlight": "#EAE4D7", // Highlighted table column header / active cell
+        "paper-light": "#FCFAF6", // Elevated paper surface
+        "paper-dark": "#ECE7DC",  // Recessed paper tone / card chrome
         ink: "#1B2420",          // Primary text (near-black with deep forest green undertone)
         "ink-muted": "#4A564F",  // Secondary text
         "ink-subtle": "#75827A", // Tertiary text
-        ledger: "#2F4A3C",       // Deep forest green (primary accent, buttons, links)
+        ledger: "#2F4A3C",       // Deep forest green (buttons, links, data-positive indicators)
         "ledger-hover": "#233A2E",
-        "ledger-light": "#E9EFEA", // Very light ledger tint
-        brass: "#B08D57",        // Secondary accent (small labels, dividers)
+        "ledger-light": "#E9EFEA", // Very light ledger tint for badges
+        brass: "#B08D57",        // Secondary accent
+        "brass-dark": "#8C6A38", // High-contrast brass for small labels & metadata (>4.5:1 on paper)
         "brass-light": "#F5EFE6",
         line: "#D9D2C2",         // Hairline borders, dividers
         "line-dark": "#C5BCAB",

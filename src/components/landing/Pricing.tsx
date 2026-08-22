@@ -20,12 +20,12 @@ export default function Pricing() {
   const [demoOpen, setDemoOpen] = useState(false);
 
   return (
-    <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8 bg-paper border-b border-line">
+    <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8 bg-paper-band border-b border-line">
       <DemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
 
       <div className="max-w-6xl mx-auto">
         <div className="max-w-3xl mb-12">
-          <span className="font-mono text-xs uppercase tracking-widest text-brass font-medium">
+          <span className="font-mono text-xs uppercase tracking-widest text-brass-dark font-semibold">
             Transparent Pricing
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-ink leading-tight mt-2">
@@ -48,9 +48,15 @@ export default function Pricing() {
                   <div>Single Campus</div>
                   <div className="font-mono text-xs text-ink-muted font-normal mt-0.5">$240 / month</div>
                 </th>
-                <th className="py-4 px-4 sm:px-6 font-semibold w-2/9 border-l border-line bg-paper-light">
-                  <div className="text-ledger font-bold">Multi-Campus</div>
-                  <div className="font-mono text-xs text-ink-muted font-normal mt-0.5">$780 / month</div>
+                {/* Highlighted Multi-Campus Header Cell */}
+                <th className="py-4 px-4 sm:px-6 font-semibold w-2/9 border-l border-line bg-paper-highlight relative">
+                  <div className="flex items-center justify-between">
+                    <span className="text-ledger font-bold text-sm">Multi-Campus</span>
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-brass-dark font-bold bg-paper px-1.5 py-0.5 rounded border border-line">
+                      Standard
+                    </span>
+                  </div>
+                  <div className="font-mono text-xs text-ink font-semibold mt-0.5">$780 / month</div>
                 </th>
                 <th className="py-4 px-4 sm:px-6 font-semibold w-2/9 border-l border-line">
                   <div>District Network</div>
@@ -67,8 +73,13 @@ export default function Pricing() {
                   <td className="py-3.5 px-4 sm:px-6 text-ink-muted border-l border-line">
                     {row.single}
                   </td>
-                  <td className="py-3.5 px-4 sm:px-6 text-ink font-semibold border-l border-line bg-paper-light">
-                    {row.multi}
+                  {/* Subtle Tinted Multi-Campus Column */}
+                  <td className="py-3.5 px-4 sm:px-6 text-ink font-semibold border-l border-line bg-paper-highlight/60">
+                    {row.multi === "Included" ? (
+                      <span className="text-ledger font-bold">Included</span>
+                    ) : (
+                      row.multi
+                    )}
                   </td>
                   <td className="py-3.5 px-4 sm:px-6 text-ink-muted border-l border-line">
                     {row.district}
@@ -88,7 +99,7 @@ export default function Pricing() {
                     Try Single Campus
                   </Link>
                 </td>
-                <td className="py-4 px-4 sm:px-6 border-l border-line bg-paper-light">
+                <td className="py-4 px-4 sm:px-6 border-l border-line bg-paper-highlight">
                   <button
                     onClick={() => setDemoOpen(true)}
                     className="w-full text-center bg-ledger hover:bg-ledger-hover text-paper py-2 px-3 rounded text-xs font-semibold font-sans transition-colors cursor-pointer"

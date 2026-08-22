@@ -8,12 +8,12 @@ export default function ContactCTA() {
   const [demoOpen, setDemoOpen] = useState(false);
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-paper border-b border-line">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-paper-band border-b border-line">
       <DemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
 
       <div className="max-w-4xl mx-auto">
         <div className="paper-card rounded p-8 sm:p-12 text-center border border-line shadow-ledger space-y-6">
-          <span className="font-mono text-xs uppercase tracking-widest text-brass font-medium">
+          <span className="font-mono text-xs uppercase tracking-widest text-brass-dark font-semibold">
             Walkthrough &amp; Evaluation
           </span>
 

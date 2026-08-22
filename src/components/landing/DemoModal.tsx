@@ -162,7 +162,7 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
               {/* Header */}
               <div className="flex items-start justify-between p-6 pb-4 border-b border-line bg-paper">
                 <div>
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-brass font-semibold">
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-brass-dark font-semibold">
                     Live System Walkthrough
                   </span>
                   <h2 className="font-serif text-2xl font-bold text-ink mt-0.5">
