@@ -1,82 +1,30 @@
 /**
- * Custom JWT authentication helpers.
- * Uses `jose` (Edge-compatible) for token sign/verify.
- * Uses `bcryptjs` for password hashing (Node.js only — API routes / server actions).
+ * Full authentication helpers (Node.js runtime only).
+ * Re-exports all Edge-safe helpers from auth-edge.ts, plus adds
+ * next/headers-dependent server helpers (getServerSession, cookie helpers).
+ *
+ * NEVER import this file from middleware.ts — use @/lib/auth-edge instead.
  */
 
-import { SignJWT, jwtVerify, type JWTPayload } from "jose";
+// Re-export everything from the Edge-safe module for backward compatibility
+export {
+  type TokenPayload,
+  verifyAccessToken,
+  verifyRefreshToken,
+  signAccessToken,
+  signRefreshToken,
+  hashRefreshToken,
+  refreshTokenExpiryDate,
+} from "./auth-edge";
+
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { verifyAccessToken, type TokenPayload } from "./auth-edge";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const ACCESS_TOKEN_COOKIE  = "access_token";
 const REFRESH_TOKEN_COOKIE = "refresh_token";
-
-const ACCESS_TOKEN_EXPIRY  = "15m";   // short-lived
-const REFRESH_TOKEN_EXPIRY = "7d";    // long-lived
-
-// ─── Secret keys (loaded once at module level) ───────────────────────────────
-
-function getSecret(envKey: string): Uint8Array {
-  const val = process.env[envKey];
-  if (!val) {
-    if (process.env.NODE_ENV === "production") {
-      throw new Error(`CRITICAL SECURITY ERROR: Missing environment variable: ${envKey}`);
-    }
-    console.error(`[AUTH] Missing environment variable: ${envKey}. Please configure it in your .env file.`);
-    throw new Error(`Missing required auth secret: ${envKey}`);
-  }
-  return new TextEncoder().encode(val);
-}
-
-// ─── Token payload shape ─────────────────────────────────────────────────────
-
-export interface TokenPayload extends JWTPayload {
-  userId:   string;
-  role:     string;
-  schoolId: string | null;
-  username: string;
-  impersonatorId?: string;
-}
-
-// ─── Sign ─────────────────────────────────────────────────────────────────────
-
-export async function signAccessToken(payload: Omit<TokenPayload, "iat" | "exp">): Promise<string> {
-  return new SignJWT({ ...payload })
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime(ACCESS_TOKEN_EXPIRY)
-    .sign(getSecret("JWT_ACCESS_SECRET"));
-}
-
-export async function signRefreshToken(payload: Omit<TokenPayload, "iat" | "exp">): Promise<string> {
-  return new SignJWT({ ...payload })
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime(REFRESH_TOKEN_EXPIRY)
-    .sign(getSecret("JWT_REFRESH_SECRET"));
-}
-
-// ─── Verify ───────────────────────────────────────────────────────────────────
-
-export async function verifyAccessToken(token: string): Promise<TokenPayload | null> {
-  try {
-    const { payload } = await jwtVerify(token, getSecret("JWT_ACCESS_SECRET"));
-    return payload as TokenPayload;
-  } catch {
-    return null;
-  }
-}
-
-export async function verifyRefreshToken(token: string): Promise<TokenPayload | null> {
-  try {
-    const { payload } = await jwtVerify(token, getSecret("JWT_REFRESH_SECRET"));
-    return payload as TokenPayload;
-  } catch {
-    return null;
-  }
-}
 
 // ─── Cookie helpers ───────────────────────────────────────────────────────────
 
@@ -111,7 +59,7 @@ export function clearAuthCookies(res: NextResponse) {
   res.cookies.set(REFRESH_TOKEN_COOKIE, "", { maxAge: 0, path: "/" });
 }
 
-// ─── Read token from request (middleware-safe) ────────────────────────────────
+// ─── Read token from request (middleware-safe via NextRequest) ────────────────
 
 export function getAccessTokenFromRequest(req: NextRequest): string | null {
   return req.cookies.get(ACCESS_TOKEN_COOKIE)?.value ?? null;
@@ -136,16 +84,4 @@ export async function getServerSession(): Promise<TokenPayload | null> {
   } catch {
     return null;
   }
-}
-
-// ─── Compute refresh token expiry date ───────────────────────────────────────
-
-export function refreshTokenExpiryDate(): Date {
-  return new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-}
-
-/** A database breach must not disclose reusable refresh credentials. */
-export async function hashRefreshToken(token: string): Promise<string> {
-  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
-  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }

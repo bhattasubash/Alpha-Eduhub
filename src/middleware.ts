@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyAccessToken } from "@/lib/auth";
+import { verifyAccessToken } from "@/lib/auth-edge";
 import { getCanonicalRole } from "@/lib/roles";
 
 // Public routes that do not require authentication
