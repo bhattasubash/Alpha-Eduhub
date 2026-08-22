@@ -1,8 +1,7 @@
 import prisma from "@/lib/prisma";
 import { getCurrentSchoolId } from "@/lib/getRole";
 import Link from "next/link";
-
-const BG = ["bg-lamaSkyLight", "bg-lamaPurpleLight", "bg-lamaYellowLight"] as const;
+import { Megaphone, ArrowUpRight } from "lucide-react";
 
 const Announcements = async () => {
   const schoolId = await getCurrentSchoolId();
@@ -16,40 +15,49 @@ const Announcements = async () => {
       select:  { id: true, title: true, description: true, date: true },
     });
   } catch {
-    // empty — no crash
-  }
-
-  if (data.length === 0) {
-    return (
-      <div className="bg-white p-4 rounded-md">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-semibold">Announcements</h1>
-          <Link href="/list/announcements" className="text-xs text-gray-400 hover:underline">View All</Link>
-        </div>
-        <p className="text-sm text-gray-400 text-center py-6">No announcements yet.</p>
-      </div>
-    );
+    // empty
   }
 
   return (
-    <div className="bg-white p-4 rounded-md">
+    <div className="bg-white p-5 rounded-xl border border-slate-200/80 shadow-xs">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-semibold">Announcements</h1>
-        <Link href="/list/announcements" className="text-xs text-gray-400 hover:underline">View All</Link>
-      </div>
-      <div className="flex flex-col gap-4">
-        {data.map((item, i) => (
-          <div key={item.id} className={`${BG[i % BG.length]} rounded-md p-4`}>
-            <div className="flex items-center justify-between">
-              <h2 className="font-medium text-sm">{item.title}</h2>
-              <span className="text-xs text-gray-400 bg-white rounded-md px-1 py-1">
-                {new Intl.DateTimeFormat("en-GB").format(item.date)}
-              </span>
-            </div>
-            <p className="text-sm text-gray-400 mt-1 line-clamp-2">{item.description}</p>
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center">
+            <Megaphone className="w-3.5 h-3.5" strokeWidth={2} />
           </div>
-        ))}
+          <h2 className="text-sm font-bold text-slate-900 tracking-tight">Announcements</h2>
+        </div>
+        <Link
+          href="/list/announcements"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+        >
+          <span>View All</span>
+          <ArrowUpRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
+
+      {data.length === 0 ? (
+        <div className="py-8 text-center bg-slate-50/50 rounded-lg border border-dashed border-slate-200">
+          <p className="text-xs text-slate-400 font-medium">No published announcements.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {data.map((item) => (
+            <div
+              key={item.id}
+              className="bg-slate-50/70 hover:bg-slate-50 rounded-lg p-3.5 border border-slate-200/60 hover:border-slate-300 transition-colors"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="font-semibold text-xs text-slate-800 tracking-tight">{item.title}</h3>
+                <span className="font-mono text-[10px] text-slate-500 bg-white border border-slate-200 px-1.5 py-0.5 rounded">
+                  {new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short" }).format(item.date)}
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">{item.description}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

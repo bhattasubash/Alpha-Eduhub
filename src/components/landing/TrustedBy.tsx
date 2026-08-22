@@ -1,79 +1,79 @@
 "use client";
 
-import { motion } from "framer-motion";
+import {
+  GraduationCap,
+  CalendarCheck,
+  BarChart3,
+  Users,
+  Smartphone,
+  CreditCard,
+  Calendar,
+  Bell,
+  ShieldCheck,
+  Database,
+  Cpu,
+  Server,
+} from "lucide-react";
 
-const highlights = [
-  { icon: "🏫", label: "Admissions Management" },
-  { icon: "📋", label: "Attendance Tracking" },
-  { icon: "📊", label: "Grade Analytics" },
-  { icon: "👨‍👩‍👧", label: "Parent Portal" },
-  { icon: "📱", label: "Mobile Access" },
-  { icon: "💰", label: "Fee Management" },
-  { icon: "📅", label: "Smart Scheduling" },
-  { icon: "🔔", label: "Real-time Notifications" },
+const CAPABILITIES = [
+  { icon: GraduationCap, label: "Admissions & Roster" },
+  { icon: CalendarCheck, label: "Biometric & Roll Call" },
+  { icon: BarChart3, label: "Gradebook Analytics" },
+  { icon: Users, label: "Guardian Portal" },
+  { icon: Smartphone, label: "Responsive PWA Access" },
+  { icon: CreditCard, label: "Tuition & Fee Ledgers" },
+  { icon: Calendar, label: "Timetable Scheduling" },
+  { icon: Bell, label: "Real-Time Notifications" },
+];
+
+const ECOSYSTEM_STACK = [
+  { icon: Database, label: "PostgreSQL Multi-Tenant DB" },
+  { icon: Server, label: "Edge Routing & Caching" },
+  { icon: ShieldCheck, label: "AES-256 Encrypted At Rest" },
+  { icon: Cpu, label: "REST & Server Action Pipeline" },
 ];
 
 export default function TrustedBy() {
   return (
-    <section className="py-16 px-4 border-y border-white/5">
+    <section className="py-14 px-4 sm:px-6 lg:px-8 bg-slate-950 border-y border-slate-900">
       <div className="max-w-7xl mx-auto">
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-center text-white/30 text-sm uppercase tracking-widest mb-10 font-medium"
-        >
-          Everything your school needs in one platform
-        </motion.p>
+        <p className="text-center text-slate-400 text-xs uppercase tracking-widest mb-8 font-semibold">
+          Unified Core Capabilities Across All School Levels
+        </p>
 
-        {/* Scrolling feature marquee */}
-        <div className="relative overflow-hidden">
-          {/* Fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#050816] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#050816] to-transparent z-10 pointer-events-none" />
-
-          <motion.div
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ duration: 25, ease: "linear", repeat: Infinity }}
-            className="flex gap-12 whitespace-nowrap"
-          >
-            {[...highlights, ...highlights].map((item, i) => (
+        {/* Clean capability grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-10">
+          {CAPABILITIES.map((item) => {
+            const Icon = item.icon;
+            return (
               <div
-                key={i}
-                className="flex items-center gap-3 text-white/30 hover:text-white/60 transition-colors cursor-default select-none"
+                key={item.label}
+                className="flex flex-col items-center justify-center p-3 rounded-lg border border-slate-800/80 bg-slate-900/50 hover:border-slate-700 transition-colors text-center"
               >
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center flex-shrink-0">
-                  <span className="text-sm">{item.icon}</span>
-                </div>
-                <span className="text-sm font-semibold tracking-wide">{item.label}</span>
+                <Icon className="w-4 h-4 text-blue-400 mb-2" strokeWidth={1.75} />
+                <span className="text-[11px] font-medium text-slate-300 leading-tight">
+                  {item.label}
+                </span>
               </div>
-            ))}
-          </motion.div>
+            );
+          })}
         </div>
 
-        {/* Early access banner */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex flex-wrap items-center justify-center gap-6 mt-12"
-        >
-          {[
-            { label: "Early Access Open", icon: "🚀" },
-            { label: "Free Onboarding", icon: "🎁" },
-            { label: "Dedicated Support", icon: "💬" },
-            { label: "Data Privacy First", icon: "🔒" },
-          ].map((badge) => (
-            <div
-              key={badge.label}
-              className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 text-white/50 text-xs font-medium"
-            >
-              <span>{badge.icon}</span>
-              {badge.label}
-            </div>
-          ))}
-        </motion.div>
+        {/* Architecture validation strip */}
+        <div className="flex flex-wrap items-center justify-center gap-6 pt-6 border-t border-slate-900/80">
+          {ECOSYSTEM_STACK.map((tech) => {
+            const Icon = tech.icon;
+            return (
+              <div
+                key={tech.label}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-slate-800 bg-slate-900/60 text-slate-400 text-xs font-medium"
+              >
+                <Icon className="w-3.5 h-3.5 text-slate-400" strokeWidth={1.75} />
+                <span>{tech.label}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

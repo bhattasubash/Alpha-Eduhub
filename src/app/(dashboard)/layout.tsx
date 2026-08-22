@@ -1,13 +1,12 @@
 import Menu from "@/components/Menu";
 import Navbar from "@/components/Navbar";
 import ImpersonationBanner from "@/components/ImpersonationBanner";
-import { getRole, getActiveSchoolId } from "@/lib/getRole";
+import { getActiveSchoolId, getSession } from "@/lib/getRole";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/getRole";
 
 export default async function DashboardLayout({
   children,
@@ -46,86 +45,52 @@ export default async function DashboardLayout({
     role === "PARENT"       ? "/parent"      :
     `/${role}`;
 
-  // Teachers have their own custom layout with single sidebar
-  if (role === "TEACHER" || role === "teacher") {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <ImpersonationBanner 
-          isImpersonating={isSchoolImpersonating} 
-          schoolName={schoolName} 
-          isDeepImpersonating={isDeepImpersonating}
-          impersonatedUsername={session.username}
-        />
-        {children}
-      </div>
-    );
-  }
-
-  // Students and parents also have custom layout (similar to teachers)
-  if (role === "STUDENT" || role === "student" || role === "PARENT") {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <ImpersonationBanner 
-          isImpersonating={isSchoolImpersonating} 
-          schoolName={schoolName} 
-          isDeepImpersonating={isDeepImpersonating}
-          impersonatedUsername={session.username}
-        />
-        <div className="flex-1 h-screen flex">
-          {/* Sidebar */}
-          <div className="w-[14%] md:w-[8%] lg:w-[16%] xl:w-[14%] p-4">
-            <Link
-              href={homeHref}
-              className="flex items-center justify-center lg:justify-start gap-2"
-            >
-              <Image src="/logo.png" alt="logo" width={32} height={32} />
-              <span className="hidden lg:block font-bold text-base text-gray-800">
-                Alpha Edu Hub
-              </span>
-            </Link>
-            <Menu />
-          </div>
-
-          {/* Main content */}
-          <div className="w-[86%] md:w-[92%] lg:w-[84%] xl:w-[86%] bg-[#F7F8FA] overflow-scroll flex flex-col">
-            <Navbar />
-            {children}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
       <ImpersonationBanner 
         isImpersonating={isSchoolImpersonating} 
         schoolName={schoolName} 
         isDeepImpersonating={isDeepImpersonating}
         impersonatedUsername={session.username}
       />
-      <div className="flex-1 h-screen flex">
-        {/* Sidebar */}
-        <div className="w-[14%] md:w-[8%] lg:w-[16%] xl:w-[14%] p-4">
-          <Link
-            href={homeHref}
-            className="flex items-center justify-center lg:justify-start gap-2"
-          >
-            <Image src="/logo.png" alt="logo" width={32} height={32} />
-            <span className="hidden lg:block font-bold text-base text-gray-800">
-              Alpha Edu Hub
-            </span>
-          </Link>
-          <Menu />
-        </div>
+      
+      <div className="flex-1 flex min-h-screen">
+        {/* Modern Responsive Sidebar */}
+        <aside className="w-16 lg:w-64 bg-white border-r border-slate-200/80 flex flex-col shrink-0 sticky top-0 h-screen overflow-y-auto scrollbar-clean">
+          {/* Institution Header / Logo */}
+          <div className="p-4 lg:px-5 lg:py-4.5 border-b border-slate-100 flex items-center justify-between">
+            <Link
+              href={homeHref}
+              className="flex items-center gap-2.5 group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-xs group-hover:bg-blue-700 transition-colors">
+                <Image src="/logo.png" alt="logo" width={22} height={22} className="brightness-200" />
+              </div>
+              <div className="hidden lg:flex flex-col">
+                <span className="font-bold text-sm text-slate-900 tracking-tight leading-tight">
+                  Alpha EduHub
+                </span>
+                <span className="text-[10px] text-slate-400 font-medium tracking-wide">
+                  Enterprise Suite
+                </span>
+              </div>
+            </Link>
+          </div>
 
-        {/* Main content */}
-        <div className="w-[86%] md:w-[92%] lg:w-[84%] xl:w-[86%] bg-[#F7F8FA] overflow-scroll flex flex-col">
+          {/* Navigation Links */}
+          <div className="flex-1 p-3 lg:px-4 py-4">
+            <Menu />
+          </div>
+        </aside>
+
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col min-w-0 bg-slate-50">
           <Navbar />
-          {children}
+          <main className="flex-1 p-4 lg:p-6 max-w-7xl w-full mx-auto">
+            {children}
+          </main>
         </div>
       </div>
     </div>
   );
 }
-

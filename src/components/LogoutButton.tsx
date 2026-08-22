@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { LogOut } from "lucide-react";
 
 interface LogoutButtonProps {
   showImage?: boolean;
@@ -17,11 +17,11 @@ export default function LogoutButton({ showImage = true, showLabel = false }: Lo
   return (
     <button 
       onClick={handleLogout} 
-      title="Sign out"
-      className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity"
+      title="Sign out of account"
+      className="flex items-center gap-2 p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-100"
     >
-      {showImage && <Image src="/logout.png" alt="Sign out" width={20} height={20} />}
-      {showLabel && <span>Logout</span>}
+      {showImage && <LogOut className="w-4 h-4" strokeWidth={1.75} />}
+      {showLabel && <span className="text-xs font-medium">Sign Out</span>}
     </button>
   );
 }

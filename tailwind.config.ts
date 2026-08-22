@@ -16,24 +16,44 @@ const config: Config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["'Plus Jakarta Sans'", "-apple-system", "BlinkMacSystemFont", "'Segoe UI'", "Roboto", "sans-serif"],
+        display: ["'Outfit'", "'Plus Jakarta Sans'", "sans-serif"],
+        mono: ["'JetBrains Mono'", "monospace"],
+      },
       spacing: {
         '18': '4.5rem',
         '88': '22rem',
         '112': '28rem',
         '128': '32rem',
       },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
       colors: {
-        lamaSky: "#C3EBFA",
-        lamaSkyLight: "#EDF9FD",
-        lamaPurple: "#CFCEFF",
-        lamaPurpleLight: "#F1F0FF",
-        lamaYellow: "#FAE27C",
-        lamaYellowLight: "#FEFCE8",
+        // Refined institutional semantic tokens (replaces cartoon pastels)
+        lamaSky: "#E0F2FE", // sky-100 (subtle calm academic blue)
+        lamaSkyLight: "#F0F9FF", // sky-50
+        lamaPurple: "#EDE9FE", // violet-100 (refined soft violet)
+        lamaPurpleLight: "#F5F3FF", // violet-50
+        lamaYellow: "#FEF3C7", // amber-100 (warm subtle amber)
+        lamaYellowLight: "#FFFBEB", // amber-50
+
+        // Institutional Core Palette
+        brand: {
+          50: "#EFF6FF",
+          100: "#DBEAFE",
+          200: "#BFDBFE",
+          300: "#93C5FD",
+          400: "#60A5FA",
+          500: "#3B82F6",
+          600: "#2563EB",
+          700: "#1D4ED8",
+          800: "#1E40AF",
+          900: "#1E3A8A",
+          950: "#0F172A",
+        },
+        slate: {
+          850: "#151F32",
+          950: "#090D16",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -69,9 +89,18 @@ const config: Config = {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        '3xl': '1.25rem',
+        '2xl': '1rem',
+        xl: '0.75rem',
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      boxShadow: {
+        'subtle': '0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 3px 1px rgba(0, 0, 0, 0.02)',
+        'card': '0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04)',
+        'card-hover': '0 4px 12px 0 rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04)',
+        'popover': '0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05)',
       },
       keyframes: {
         "accordion-down": {

@@ -1,9 +1,8 @@
 "use client";
-import Image from "next/image";
+
 import {
   BarChart,
   Bar,
-  Rectangle,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -19,34 +18,49 @@ const AttendanceChart = ({
 }) => {
   return (
     <ResponsiveContainer width="100%" height="90%">
-      <BarChart width={500} height={300} data={data} barSize={20}>
-        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ddd" />
+      <BarChart width={500} height={300} data={data} barSize={16}>
+        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
         <XAxis
           dataKey="name"
           axisLine={false}
-          tick={{ fill: "#d1d5db" }}
+          tick={{ fill: "#64748B", fontSize: 12 }}
           tickLine={false}
+          dy={6}
         />
-        <YAxis axisLine={false} tick={{ fill: "#d1d5db" }} tickLine={false} />
+        <YAxis
+          axisLine={false}
+          tick={{ fill: "#64748B", fontSize: 12 }}
+          tickLine={false}
+          dx={-6}
+        />
         <Tooltip
-          contentStyle={{ borderRadius: "10px", borderColor: "lightgray" }}
+          contentStyle={{
+            backgroundColor: "#FFFFFF",
+            borderRadius: "8px",
+            borderColor: "#E2E8F0",
+            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
+            fontSize: "12px",
+            fontWeight: 500,
+          }}
         />
         <Legend
-          align="left"
+          align="right"
           verticalAlign="top"
-          wrapperStyle={{ paddingTop: "20px", paddingBottom: "40px" }}
+          iconType="circle"
+          iconSize={8}
+          wrapperStyle={{ paddingTop: "8px", paddingBottom: "24px", fontSize: "12px", color: "#475569" }}
         />
         <Bar
           dataKey="present"
-          fill="#FAE27C"
-          legendType="circle"
-          radius={[10, 10, 0, 0]}
+          name="Present"
+          fill="#2563EB"
+          radius={[4, 4, 0, 0]}
         />
         <Bar
           dataKey="absent"
-          fill="#C3EBFA"
-          legendType="circle"
-          radius={[10, 10, 0, 0]}
+          name="Absent"
+          fill="#94A3B8"
+          radius={[4, 4, 0, 0]}
         />
       </BarChart>
     </ResponsiveContainer>

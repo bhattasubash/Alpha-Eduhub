@@ -2,15 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, GraduationCap, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 const navLinks = [
-  { label: "Features", href: "#features" },
-  { label: "Dashboards", href: "#preview" },
-  { label: "Platform", href: "#webapp" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Architecture", href: "#technical-architecture" },
+  { label: "Core Capabilities", href: "#features" },
+  { label: "Interactive Preview", href: "#preview" },
+  { label: "Role Workflows", href: "#webapp" },
+  { label: "Plans & Licensing", href: "#pricing" },
+  { label: "System Architecture", href: "#technical-architecture" },
   { label: "FAQ", href: "#faq" },
 ];
 
@@ -29,59 +30,64 @@ export default function Navbar() {
       <motion.header
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "backdrop-blur-xl bg-slate-950/80 border-b border-white/10 shadow-lg shadow-black/20"
+            ? "backdrop-blur-md bg-slate-950/90 border-b border-slate-800/80 shadow-md shadow-black/20"
             : "bg-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:shadow-indigo-500/40 transition-shadow">
-                <GraduationCap className="w-5 h-5 text-white" />
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-xs group-hover:bg-blue-500 transition-colors">
+                <Image src="/logo.png" alt="logo" width={22} height={22} className="brightness-200" />
               </div>
-              <span className="font-bold text-white text-lg tracking-tight">
-                Alpha <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Edu Hub</span>
-              </span>
+              <div className="flex flex-col">
+                <span className="font-bold text-white text-base tracking-tight leading-tight">
+                  Alpha EduHub
+                </span>
+                <span className="text-[10px] text-slate-400 font-medium tracking-wide">
+                  School Operating System
+                </span>
+              </div>
             </Link>
 
             {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className="px-3.5 py-2 text-sm text-white/70 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                  className="px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white rounded-md hover:bg-slate-800/60 transition-colors"
                 >
                   {link.label}
                 </a>
               ))}
             </nav>
 
-            {/* Desktop CTA */}
+            {/* Desktop Actions */}
             <div className="hidden md:flex items-center gap-3">
               <Link
                 href="/demo-login"
-                className="px-4 py-2 text-sm font-medium text-white/80 hover:text-white border border-white/10 rounded-xl hover:bg-white/5 transition-all"
+                className="px-3.5 py-1.5 text-xs font-semibold text-slate-200 hover:text-white border border-slate-700/80 rounded-lg hover:bg-slate-800/60 transition-all"
               >
-                Demo Access
+                Instant Sandbox
               </Link>
               <Link
                 href="/sign-in"
-                className="inline-flex items-center gap-2 px-5 py-2 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 shadow-lg shadow-blue-500/25 transition-all hover:scale-105"
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-white rounded-lg bg-blue-600 hover:bg-blue-500 shadow-xs transition-colors"
               >
-                Sign In
-                <ArrowRight className="w-4 h-4" />
+                <span>Console Sign In</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all"
+              className="md:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all"
               aria-label="Toggle menu"
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -94,11 +100,11 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-            className="fixed top-16 left-0 right-0 z-40 backdrop-blur-xl bg-[#050816]/95 border-b border-white/10 md:hidden"
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.15 }}
+            className="fixed top-16 left-0 right-0 z-40 backdrop-blur-md bg-slate-950/98 border-b border-slate-800 md:hidden"
           >
             <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
               {navLinks.map((link) => (
@@ -106,25 +112,25 @@ export default function Navbar() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                  className="px-3 py-2.5 text-slate-300 hover:text-white hover:bg-slate-900 rounded-lg transition-colors text-xs font-medium"
                 >
                   {link.label}
                 </a>
               ))}
-              <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-white/10">
+              <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-slate-800">
                 <Link
                   href="/demo-login"
                   onClick={() => setMobileOpen(false)}
-                  className="px-4 py-3 text-white/80 hover:text-white text-center rounded-lg border border-white/10 hover:bg-white/5 transition-all font-medium text-sm"
+                  className="px-4 py-2.5 text-slate-200 text-center rounded-lg border border-slate-700 hover:bg-slate-800 transition-colors font-semibold text-xs"
                 >
-                  Demo Access
+                  Instant Sandbox
                 </Link>
                 <Link
                   href="/sign-in"
                   onClick={() => setMobileOpen(false)}
-                  className="px-4 py-3 text-white font-semibold text-center rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 transition-all text-sm"
+                  className="px-4 py-2.5 text-white font-semibold text-center rounded-lg bg-blue-600 hover:bg-blue-500 transition-colors text-xs"
                 >
-                  Sign In
+                  Console Sign In
                 </Link>
               </div>
             </div>

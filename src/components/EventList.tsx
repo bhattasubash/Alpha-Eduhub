@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { getCurrentSchoolId } from "@/lib/getRole";
+import { Clock } from "lucide-react";
 
 const EventList = async ({ dateParam }: { dateParam: string | undefined }) => {
   const schoolId = await getCurrentSchoolId();
@@ -27,26 +28,33 @@ const EventList = async ({ dateParam }: { dateParam: string | undefined }) => {
   }
 
   if (data.length === 0) {
-    return <p className="text-sm text-gray-400 text-center py-4">No events for this day.</p>;
+    return (
+      <div className="py-6 text-center">
+        <p className="text-xs text-slate-400 font-medium">No scheduled events for this date.</p>
+      </div>
+    );
   }
 
   return (
-    <>
+    <div className="space-y-2.5">
       {data.map((event) => (
         <div
           key={event.id}
-          className="p-5 rounded-md border-2 border-gray-100 border-t-4 odd:border-t-lamaSky even:border-t-lamaPurple"
+          className="p-3.5 rounded-lg border border-slate-200/80 bg-white hover:border-slate-300 transition-colors shadow-2xs"
         >
-          <div className="flex items-center justify-between">
-            <h1 className="font-semibold text-gray-600">{event.title}</h1>
-            <span className="text-gray-300 text-xs">
-              {event.startTime.toLocaleTimeString("en-UK", { hour: "2-digit", minute: "2-digit", hour12: false })}
+          <div className="flex items-center justify-between gap-2">
+            <h4 className="font-semibold text-xs text-slate-800 tracking-tight">{event.title}</h4>
+            <span className="inline-flex items-center gap-1 font-mono text-[11px] text-slate-500 bg-slate-50 border border-slate-200/70 px-2 py-0.5 rounded">
+              <Clock className="w-3 h-3 text-slate-400" />
+              {event.startTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}
             </span>
           </div>
-          <p className="mt-2 text-gray-400 text-sm line-clamp-2">{event.description}</p>
+          {event.description && (
+            <p className="mt-1.5 text-xs text-slate-500 line-clamp-2 leading-relaxed">{event.description}</p>
+          )}
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

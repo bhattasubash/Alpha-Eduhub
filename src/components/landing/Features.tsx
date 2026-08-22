@@ -1,181 +1,145 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  BarChart3,
-  Bell,
   BookOpen,
-  Calendar,
-  ClipboardList,
+  CalendarCheck,
+  CreditCard,
+  ShieldAlert,
   GraduationCap,
-  MessageSquare,
-  Shield,
-  Smartphone,
   Users,
-  Zap,
-  Globe,
+  FileSpreadsheet,
+  Clock,
+  ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
 
-const features = [
+const CAPABILITY_PILLARS = [
   {
-    icon: BarChart3,
-    title: "Advanced Analytics",
-    description: "Real-time dashboards with deep insights into student performance, attendance trends, and school-wide metrics.",
-    gradient: "from-blue-500 to-cyan-500",
-    glow: "group-hover:shadow-blue-500/20",
-    badge: "Popular",
+    category: "ACADEMIC & CURRICULUM",
+    title: "Instructional Workflows & Gradebook Automation",
+    description:
+      "Eliminate spreadsheet chaos with a unified syllabus manager, lesson registry, examination scheduler, and single-click transcript generation.",
+    items: [
+      {
+        icon: BookOpen,
+        title: "Curriculum & Lesson Planning",
+        desc: "Structure syllabi across terms, link lesson materials, and map standards-aligned objectives.",
+      },
+      {
+        icon: FileSpreadsheet,
+        title: "Examinations & Grade Publishing",
+        desc: "Enter exam results once; generate branded PDF report cards and student performance trends instantly.",
+      },
+      {
+        icon: Clock,
+        title: "Conflict-Free Timetable Engine",
+        desc: "Automated schedule allocation that validates instructor availability, room capacities, and class periods.",
+      },
+    ],
   },
   {
-    icon: Users,
-    title: "Student Management",
-    description: "Comprehensive profiles, enrollment workflows, and progress tracking — all in one streamlined interface.",
-    gradient: "from-purple-500 to-pink-500",
-    glow: "group-hover:shadow-purple-500/20",
-  },
-  {
-    icon: Calendar,
-    title: "Smart Scheduling",
-    description: "AI-assisted timetable generation that eliminates conflicts and optimizes resource allocation automatically.",
-    gradient: "from-violet-500 to-purple-500",
-    glow: "group-hover:shadow-violet-500/20",
-  },
-  {
-    icon: ClipboardList,
-    title: "Attendance Tracking",
-    description: "One-click mark, QR-based check-in, and automated parent notifications when a student is absent.",
-    gradient: "from-emerald-500 to-teal-500",
-    glow: "group-hover:shadow-emerald-500/20",
-    badge: "New",
-  },
-  {
-    icon: GraduationCap,
-    title: "Exam & Results",
-    description: "Build, schedule, and auto-grade exams. Generate report cards with a single click.",
-    gradient: "from-orange-500 to-amber-500",
-    glow: "group-hover:shadow-orange-500/20",
-  },
-  {
-    icon: MessageSquare,
-    title: "Parent Communication",
-    description: "Direct messaging, announcements, and progress reports delivered instantly to parents' devices.",
-    gradient: "from-pink-500 to-rose-500",
-    glow: "group-hover:shadow-pink-500/20",
-  },
-  {
-    icon: Bell,
-    title: "Smart Notifications",
-    description: "Context-aware alerts for deadlines, events, and performance milestones — no noise, just signal.",
-    gradient: "from-yellow-500 to-orange-500",
-    glow: "group-hover:shadow-yellow-500/20",
-  },
-  {
-    icon: Smartphone,
-    title: "Mobile First",
-    description: "Native apps for iOS and Android. Full functionality wherever teachers, students, or parents are.",
-    gradient: "from-indigo-500 to-blue-500",
-    glow: "group-hover:shadow-indigo-500/20",
-  },
-  {
-    icon: Shield,
-    title: "Enterprise Security",
-    description: "Role-based access, end-to-end encryption, and SOC 2 compliance protecting every piece of data.",
-    gradient: "from-slate-400 to-slate-600",
-    glow: "group-hover:shadow-slate-500/20",
-  },
-  {
-    icon: BookOpen,
-    title: "Curriculum Builder",
-    description: "Design and align syllabi to national standards. Attach resources, videos, and assessments effortlessly.",
-    gradient: "from-teal-500 to-cyan-500",
-    glow: "group-hover:shadow-teal-500/20",
-  },
-  {
-    icon: Globe,
-    title: "Multi-Language",
-    description: "Full interface localization in 20+ languages. Serve diverse communities without language barriers.",
-    gradient: "from-blue-400 to-indigo-500",
-    glow: "group-hover:shadow-blue-400/20",
-  },
-  {
-    icon: Zap,
-    title: "Instant Setup",
-    description: "Go live in under 24 hours. Import existing data, configure roles, and onboard staff effortlessly.",
-    gradient: "from-amber-400 to-yellow-500",
-    glow: "group-hover:shadow-amber-400/20",
+    category: "GOVERNANCE & FINANCIAL OPERATIONS",
+    title: "Enterprise Multi-Tenancy & Institutional Accounting",
+    description:
+      "Built for single institutions or nationwide school networks with total data sovereignty, role boundaries, and clear ledger auditing.",
+    items: [
+      {
+        icon: CreditCard,
+        title: "Fee Structures & Collection Ledgers",
+        desc: "Set class-specific fee templates, generate invoice receipts, and track pending dues with audit logs.",
+      },
+      {
+        icon: CalendarCheck,
+        title: "Verified Attendance & Leave Desk",
+        desc: "Daily morning roll-call with automated absent triggers to guardians and staff leave review workflows.",
+      },
+      {
+        icon: ShieldAlert,
+        title: "Multi-Tenant Row Security & RBAC",
+        desc: "Isolated school schemas with granular access rules for Super Admins, Principals, Faculty, and Parents.",
+      },
+    ],
   },
 ];
 
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.07 } },
-};
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-};
-
 export default function Features() {
   return (
-    <section id="features" className="py-24 px-4">
+    <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-950 text-slate-100 border-t border-slate-900">
       <div className="max-w-7xl mx-auto">
-        {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-16"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300 text-sm font-medium mb-4">
-            <Zap className="w-3.5 h-3.5" />
-            Everything you need
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4 leading-tight">
-            Built for modern{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-              education
-            </span>
-          </h2>
-          <p className="text-white/50 text-lg max-w-2xl mx-auto">
-            Every feature is crafted to save time, reduce admin overhead, and create better outcomes for students.
+        {/* Section Header */}
+        <div className="max-w-3xl mb-16">
+          <p className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-3">
+            Core Architecture
           </p>
-        </motion.div>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
+            Engineered for every administrative layer of modern education.
+          </h2>
+          <p className="text-sm sm:text-base text-slate-400 mt-3 leading-relaxed">
+            Replace disjointed third-party plugins with a cohesive, institution-grade operational backbone.
+          </p>
+        </div>
 
-        {/* Features grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-2 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4"
-        >
-          {features.map((feature) => (
-            <motion.div
-              key={feature.title}
-              variants={cardVariants}
-              className={`group relative rounded-xl border border-white/8 bg-white/3 hover:bg-white/6 backdrop-blur-sm p-3 md:p-5 transition-all duration-300 hover:border-white/15 hover:shadow-xl ${feature.glow} cursor-default overflow-hidden`}
+        {/* Capability Pillars */}
+        <div className="space-y-12">
+          {CAPABILITY_PILLARS.map((pillar) => (
+            <div
+              key={pillar.category}
+              className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 lg:p-10"
             >
-              {/* Badge */}
-              {feature.badge && (
-                <div className="absolute top-2 right-2 md:top-3 md:right-3 px-1.5 py-0.5 md:px-2 rounded-full text-[9px] md:text-[10px] font-semibold bg-gradient-to-r from-blue-500/30 to-purple-500/30 border border-blue-500/30 text-blue-300">
-                  {feature.badge}
-                </div>
-              )}
-
-              {/* Icon */}
-              <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-2 md:mb-4 shadow-lg`}>
-                <feature.icon className="w-4 h-4 md:w-5 md:h-5 text-white" />
+              <div className="max-w-2xl mb-8">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                  {pillar.category}
+                </span>
+                <h3 className="text-xl sm:text-2xl font-bold text-white mt-1.5 tracking-tight">
+                  {pillar.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-400 mt-2 leading-relaxed">
+                  {pillar.description}
+                </p>
               </div>
 
-              <h3 className="text-white font-semibold text-xs md:text-sm mb-1 md:mb-2 leading-tight">{feature.title}</h3>
-              <p className="text-white/45 text-[11px] md:text-xs leading-snug md:leading-relaxed line-clamp-3 md:line-clamp-none">{feature.description}</p>
-
-              {/* Hover glow */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-xl md:rounded-2xl pointer-events-none`} />
-            </motion.div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-slate-800/80">
+                {pillar.items.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div
+                      key={item.title}
+                      className="p-5 rounded-xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="w-9 h-9 rounded-lg bg-blue-950 text-blue-400 border border-blue-800/50 flex items-center justify-center mb-4">
+                          <Icon className="w-4 h-4" strokeWidth={1.75} />
+                        </div>
+                        <h4 className="text-sm font-bold text-white tracking-tight mb-2">
+                          {item.title}
+                        </h4>
+                        <p className="text-xs text-slate-400 leading-relaxed">
+                          {item.desc}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           ))}
-        </motion.div>
+        </div>
+
+        {/* Bottom Banner */}
+        <div className="mt-12 p-6 rounded-xl border border-slate-800 bg-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h4 className="text-sm font-bold text-white">Need custom SIS migration assistance?</h4>
+            <p className="text-xs text-slate-400 mt-0.5">Our engineering team assists with legacy SQL & Excel data transfers.</p>
+          </div>
+          <Link
+            href="/demo-login"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shrink-0 transition-colors"
+          >
+            <span>Explore Live Sandbox</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
       </div>
     </section>
   );
