@@ -6,35 +6,27 @@ type CardType = "admin" | "teacher" | "student" | "parent";
 
 const METRICS_META: Record<
   CardType,
-  { label: string; icon: typeof Users; accentBg: string; accentText: string; trend: string }
+  { label: string; icon: typeof Users; tag: string }
 > = {
   admin: {
     label: "Administrators",
     icon: UserCheck,
-    accentBg: "bg-blue-50 text-blue-700 border-blue-100",
-    accentText: "text-blue-700",
-    trend: "Active School Ops",
+    tag: "School Ops",
   },
   teacher: {
     label: "Teaching Faculty",
     icon: GraduationCap,
-    accentBg: "bg-indigo-50 text-indigo-700 border-indigo-100",
-    accentText: "text-indigo-700",
-    trend: "Classroom Active",
+    tag: "Active Roster",
   },
   student: {
-    label: "Enrolled Students",
+    label: "Enrolled Pupils",
     icon: Users,
-    accentBg: "bg-emerald-50 text-emerald-700 border-emerald-100",
-    accentText: "text-emerald-700",
-    trend: "Academic Year",
+    tag: "Full Cohort",
   },
   parent: {
     label: "Guardians & Parents",
     icon: HeartHandshake,
-    accentBg: "bg-amber-50 text-amber-700 border-amber-100",
-    accentText: "text-amber-700",
-    trend: "Portal Connected",
+    tag: "Portal Connected",
   },
 };
 
@@ -55,21 +47,21 @@ const UserCard = async ({ type }: { type: CardType }) => {
   const Icon = meta.icon;
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200/85 p-5 flex-1 min-w-[140px] shadow-xs hover:shadow-card hover:border-slate-300 transition-all">
-      <div className="flex justify-between items-start">
-        <div className={`w-9 h-9 rounded-lg border flex items-center justify-center ${meta.accentBg}`}>
+    <div className="bg-paper-light rounded border-2 border-line p-5 flex-1 min-w-[140px] shadow-ledger">
+      <div className="flex justify-between items-start pb-3 border-b border-line">
+        <div className="w-8 h-8 rounded bg-paper border border-line flex items-center justify-center text-ledger">
           <Icon className="w-4 h-4" strokeWidth={1.75} />
         </div>
-        <span className="text-[11px] font-semibold text-slate-500 bg-slate-100/80 border border-slate-200/60 px-2 py-0.5 rounded-full">
-          {meta.trend}
+        <span className="text-[11px] font-mono font-bold text-brass-dark uppercase tracking-wider">
+          {meta.tag}
         </span>
       </div>
 
       <div className="mt-4">
-        <h3 className="text-2xl font-bold text-slate-900 tracking-tight tabular-nums">
+        <h3 className="text-3xl font-bold text-ink font-mono tracking-tight">
           {count.toLocaleString()}
         </h3>
-        <p className="text-xs font-medium text-slate-500 mt-1">
+        <p className="text-xs font-semibold text-ink-muted mt-1">
           {meta.label}
         </p>
       </div>

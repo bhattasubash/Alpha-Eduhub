@@ -22,31 +22,31 @@ const config: Config = {
         mono: ["'IBM Plex Mono'", "'JetBrains Mono'", "monospace"],
       },
       colors: {
-        // Refined Paper & Ink Editorial Tokens
-        paper: "#F6F3EC",        // Primary warm paper background
-        "paper-band": "#EFEAE0",  // Banding alternate background (breaks up 6700px scroll)
-        "paper-highlight": "#EAE4D7", // Highlighted table column header / active cell
-        "paper-light": "#FCFAF6", // Elevated paper surface
-        "paper-dark": "#ECE7DC",  // Recessed paper tone / card chrome
-        ink: "#1B2420",          // Primary text (near-black with deep forest green undertone)
-        "ink-muted": "#4A564F",  // Secondary text
-        "ink-subtle": "#75827A", // Tertiary text
-        ledger: "#2F4A3C",       // Deep forest green (buttons, links, data-positive indicators)
-        "ledger-hover": "#233A2E",
-        "ledger-light": "#E9EFEA", // Very light ledger tint for badges
+        // High-Contrast Editorial Paper & Ink Tokens
+        paper: "#F6F3EC",        // Primary warm paper canvas
+        "paper-band": "#ECE6D8",  // Distinct, richer alternate paper band (breaks scroll rhythm)
+        "paper-highlight": "#E0D7C4", // Grounded recommended tier cell tint
+        "paper-light": "#FCFAF6", // Elevated crisp paper surface
+        "paper-dark": "#E6DECFC",  // Recessed ledger tone
+        ink: "#1B2420",          // Primary text (near-black with forest undertone)
+        "ink-muted": "#46524A",  // High-contrast secondary text
+        "ink-subtle": "#6E7A72", // Crisp tertiary text
+        ledger: "#2F4A3C",       // Deep forest green (buttons, active states, data-positive)
+        "ledger-hover": "#21362B",
+        "ledger-light": "#E3EAE4", // Clear badge/indicator background
         brass: "#B08D57",        // Secondary accent
-        "brass-dark": "#8C6A38", // High-contrast brass for small labels & metadata (>4.5:1 on paper)
-        "brass-light": "#F5EFE6",
-        line: "#D9D2C2",         // Hairline borders, dividers
-        "line-dark": "#C5BCAB",
-        alert: "#8B3A3A",        // Oxblood (errors/warnings only)
+        "brass-dark": "#7D5C2C", // Deep contrast brass for section index & numerals (>5:1 ratio)
+        "brass-light": "#F2EBE0",
+        line: "#C9BEA7",         // Crisp etched divider (replaces washed-out beige)
+        "line-dark": "#B0A389",  // Heavy rule
+        alert: "#8B3A3A",        // Oxblood (warnings/unexcused flags only)
 
         // Compatibility aliases for legacy dashboard components
-        lamaSky: "#E9EFEA",
+        lamaSky: "#E3EAE4",
         lamaSkyLight: "#F6F3EC",
-        lamaPurple: "#ECE7DC",
+        lamaPurple: "#ECE6D8",
         lamaPurpleLight: "#FCFAF6",
-        lamaYellow: "#F5EFE6",
+        lamaYellow: "#F2EBE0",
         lamaYellowLight: "#FCFAF6",
 
         border: "var(--border)",
@@ -84,13 +84,13 @@ const config: Config = {
         },
       },
       borderRadius: {
-        lg: "6px",
-        md: "4px",
+        lg: "4px",
+        md: "3px",
         sm: "2px",
       },
       boxShadow: {
-        'ledger': '0 1px 3px 0 rgba(27, 36, 32, 0.06), 0 1px 2px -1px rgba(27, 36, 32, 0.04)',
-        'ledger-lift': '0 4px 12px 0 rgba(27, 36, 32, 0.08), 0 2px 4px -2px rgba(27, 36, 32, 0.04)',
+        'ledger': '0 1px 3px 0 rgba(27, 36, 32, 0.08), 0 1px 2px -1px rgba(27, 36, 32, 0.05)',
+        'ledger-lift': '0 6px 16px 0 rgba(27, 36, 32, 0.10), 0 2px 6px -2px rgba(27, 36, 32, 0.05)',
       },
     },
   },

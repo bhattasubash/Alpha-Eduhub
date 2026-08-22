@@ -26,42 +26,42 @@ export default function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-20 px-4 sm:px-6 lg:px-8 bg-paper border-b border-line">
+    <section id="faq" className="py-24 px-4 sm:px-6 lg:px-8 bg-paper border-b-2 border-line">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-12">
-          <span className="font-mono text-xs uppercase tracking-widest text-brass-dark font-semibold">
-            Common Inquiries
+        <div className="mb-14">
+          <span className="font-mono text-xs uppercase tracking-widest text-brass-dark font-bold">
+            § 07 · ADMINISTRATIVE INQUIRIES
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-ink leading-tight mt-2">
+          <h2 className="font-serif text-4xl sm:text-5xl font-bold text-ink leading-[1.08] tracking-tight mt-2">
             Frequently Asked Questions
           </h2>
-          <p className="text-base text-ink-muted mt-2">
+          <p className="text-[18px] text-ink-muted mt-3 max-w-prose leading-relaxed">
             Plain answers to the practical questions school administrators ask most often.
           </p>
         </div>
 
-        <div className="divide-y divide-line border-y border-line">
+        <div className="divide-y-2 divide-line border-y-2 border-line">
           {FAQS.map((item, idx) => {
             const isOpen = openIdx === idx;
             return (
-              <div key={item.q} className="py-5">
+              <div key={item.q} className="py-6">
                 <button
                   onClick={() => setOpenIdx(isOpen ? null : idx)}
                   className="w-full flex items-center justify-between text-left gap-4 cursor-pointer group"
                 >
-                  <span className="font-serif text-lg font-bold text-ink group-hover:text-ledger transition-colors">
+                  <span className="font-serif text-xl sm:text-2xl font-bold text-ink group-hover:text-ledger transition-colors">
                     {item.q}
                   </span>
                   <ChevronDown
-                    className={`w-4 h-4 text-ink-subtle shrink-0 transition-transform ${
+                    className={`w-5 h-5 text-ink-subtle shrink-0 transition-transform ${
                       isOpen ? "rotate-180 text-ledger" : ""
                     }`}
-                    strokeWidth={1.75}
+                    strokeWidth={2}
                   />
                 </button>
 
                 {isOpen && (
-                  <p className="mt-3 text-base text-ink-muted leading-relaxed font-normal pr-8">
+                  <p className="mt-4 text-[17px] text-ink-muted leading-relaxed font-normal pr-8 max-w-prose">
                     {item.a}
                   </p>
                 )}
