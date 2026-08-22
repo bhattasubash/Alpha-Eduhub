@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 /**
  * POST /api/demo-request
  * Receives "request a demo" form submissions from the landing page.

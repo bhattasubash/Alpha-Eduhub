@@ -7,46 +7,18 @@ import { cookies } from "next/headers";
 import { getServerSession, type TokenPayload } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
-export const VALID_ROLES = [
-  "SUPER_ADMIN",
-  "provider",
-  "admin",
-  "SCHOOL_ADMIN",
-  "teacher",
-  "TEACHER",
-  "student",
-  "STUDENT",
-  "PARENT",
-] as const;
+export { VALID_ROLES, getCanonicalRole, isTeacherRole } from "@/lib/roles";
+export type { AppRole, CanonicalRole } from "@/lib/roles";
+import { VALID_ROLES, getCanonicalRole, isTeacherRole, AppRole, CanonicalRole } from "@/lib/roles";
 
-export type AppRole = (typeof VALID_ROLES)[number];
-
-export type CanonicalRole = "Super Admin" | "Admin" | "Teacher" | "Student" | "Parent";
-
-/** Map internal database/JWT roles to the 5 canonical platform roles */
-export function getCanonicalRole(role: string): CanonicalRole {
-  switch (role) {
-    case "SUPER_ADMIN":
-    case "provider":
-      return "Super Admin";
-    case "admin":
-    case "SCHOOL_ADMIN":
-      return "Admin";
-    case "teacher":
-    case "TEACHER":
-      return "Teacher";
-    case "student":
-    case "STUDENT":
-      return "Student";
-    case "PARENT":
-      return "Parent";
-    default:
-      return "Student";
+/** Custom Error class for authentication and authorization failures */
+export class AuthError extends Error {
+  status: number;
+  constructor(message = "Unauthorized", status = 401) {
+    super(message);
+    this.name = "AuthError";
+    this.status = status;
   }
-}
-
-export function isTeacherRole(role: string | null | undefined): boolean {
-  return role === "teacher" || role === "TEACHER";
 }
 
 /**
@@ -119,18 +91,16 @@ export function getTenantWhereClause(session: TokenPayload, activeSchoolId?: str
   return { schoolId: session.schoolId ?? undefined };
 }
 
-import { redirect } from "next/navigation";
-
 /**
- * Require a valid session. Redirects to /sign-in if not authenticated.
- * Redirects to /unauthorized if role is not in allowedRoles.
+ * Require a valid session. Throws AuthError(401) if not authenticated.
+ * Throws AuthError(403) if role is not in allowedRoles.
  */
 export async function requireSession(
   allowedRoles?: AppRole[],
 ): Promise<TokenPayload> {
   const session = await getServerSession();
   if (!session) {
-    redirect("/sign-in");
+    throw new AuthError("Unauthorized: Authentication required", 401);
   }
 
   if (allowedRoles && allowedRoles.length > 0) {
@@ -142,7 +112,7 @@ export async function requireSession(
     });
 
     if (!isAllowed) {
-      redirect("/unauthorized");
+      throw new AuthError("Forbidden: Insufficient permissions", 403);
     }
   }
 

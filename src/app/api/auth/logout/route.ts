@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 /**
  * POST /api/auth/logout
  * Clears both auth cookies immediately for fast logout.

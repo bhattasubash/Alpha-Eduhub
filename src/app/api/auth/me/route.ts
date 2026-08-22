@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/auth/me
  * Returns the currently authenticated user's profile.

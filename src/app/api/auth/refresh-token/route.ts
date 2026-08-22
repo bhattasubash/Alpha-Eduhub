@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 /**
  * POST /api/auth/refresh-token
  * Reads the refresh_token cookie, validates it against DB,

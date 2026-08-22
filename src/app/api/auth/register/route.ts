@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 /**
  * POST /api/auth/register  — Provider only.
  * Creates a new Provider-level user account.

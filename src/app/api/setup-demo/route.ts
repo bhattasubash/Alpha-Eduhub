@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 /**
  * POST /api/setup-demo
  * Creates demo users for the demo login page

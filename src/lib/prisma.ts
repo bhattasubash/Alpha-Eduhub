@@ -17,8 +17,8 @@ export default prisma
 
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 
-// Graceful shutdown for serverless environments
-if (process.env.NODE_ENV === 'production') {
+// Graceful shutdown for serverless environments (Node.js runtime only)
+if (process.env.NODE_ENV === 'production' && typeof process !== 'undefined' && typeof process.on === 'function') {
   process.on('beforeExit', async () => {
     try {
       await prisma.$disconnect()
